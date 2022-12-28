@@ -1,9 +1,3 @@
-*
-
-!.gitignore
-!README.md
-!**/*.cpp
-!**/*.hpp
-!conf/
-!cgi/
-!Makefile
+.vscode
+webserv
+**/*.o
