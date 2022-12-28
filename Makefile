@@ -3,7 +3,8 @@ NAME							:=	webserv
 CXX								:=	clang++
 CXXFLAGS					:=	-Wall -Wextra -Werror -std=c++98 -MMD -MP
 
-PYTHON						:=	./python/python3.8
+PYTHON_DIR				:=	python/
+PYTHON						:=	$(PYTHON_DIR)python3.8
 
 SRCS_DIR					=		srcs/
 SRCS							=		webserv.cpp \
@@ -53,13 +54,10 @@ fclean: clean
 
 re: fclean all
 
-$(PYTHON):
-ifeq ($(OS_LINUX), 1)
-	@cp python/python3.8_Linux $@
-	@echo "Create $@ for Linux"
-else
-	@cp python/python3.8_Mac $@
-	@echo "Create $@ for Mac"
-endif
+$(PYTHON): $(PYTHON_DIR)
+	cp `which python3.8` $(PYTHON_DIR)
+
+$(PYTHON_DIR):
+	mkdir -p $(PYTHON_DIR)
 
 .PHONY: all clean fclean re 
