@@ -3,16 +3,14 @@
 int main(int argc, char **argv)
 {
   Config  config;
-  char*   path;
+  char*   path = (char *)"conf/default.conf";
 
 	if (argc > 2)
 	{
 		std::cerr << "Usage: ./webserv <config file path>" << std::endl;
 		return (0);
 	}
-  else if (argc != 2)
-    path = "conf/default.conf";
-  else
+  else if (argc == 2)
     path = argv[1];
   try
   {

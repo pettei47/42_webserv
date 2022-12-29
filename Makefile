@@ -8,35 +8,42 @@ PYTHON						:=	$(PYTHON_DIR)python3.8
 
 SRCS_DIR					=		srcs/
 SRCS							=		webserv.cpp \
+											ft_util.cpp \
+											Config.cpp \
 
-SRCS_PREFIXED			=		$(addprefix $(SOURCES_FOLDER), $(SOURCES))
+SRCS_PREFIXED			=		$(addprefix $(SRCS_DIR), $(SRCS))
 
 INCLUDES_DIR			= 	includes/
-INCLUDES					= 	WebServ.hpp \
+INCLUDES					= 	webserv.hpp \
+											ft_util.hpp \
+											ft_signal.hpp \
+											Config.hpp \
+											parse.hpp \
+											server.hpp \
 
-INCLUDES_PREFIXED	= $(addprefix $(INCLUDES_FOLDER), $(INCLUDES))
-
+INCLUDES_PREFIXED	= $(addprefix $(INCLUDES_DIR), $(INCLUDES))
 
 OBJS_DIR					=		objs/
 OBJ								=		$(SRCS:.cpp=.o)
-OBJS							=		$(addprefix $(OBJECTS_FOLDER), $(OBJECT))
-DEPENDENCIES			=		$(OBJECTS:.o=.d)
+OBJS							=		$(addprefix $(OBJS_DIR), $(OBJ))
+DEPENDENCIES			=		$(OBJS:.o=.d)
 
-DEBUG							=		0
+DEBUG_MODE				=		0
 
-ifeq ($(shell uname),Linux)
-	OS_LINUX = 1
-else
-	OS_LINUX = 0
-endif
+## pythonの取り方を変えたので不要
+# ifeq ($(shell uname),Linux)
+# 	OS_LINUX = 1
+# else
+# 	OS_LINUX = 0
+# endif
 
 all: $(NAME)
 
-$(NAME): $(PYTHON) $(OBJS)
+$(NAME): $(PYTHON) $(OBJS_DIR) $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
-$(OBJS_DIR)%.o: $(OBJS_DIR) $(SRCS_DIR)%.cpp
-	$(CXX) $(CXXFLAGS) -D OS_LINUX=$(OS_LINUX) -D DEBUG=$(DEBUG) -c $< -o $@ -I$(INCLUDES_DIR)
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
+	$(CXX) $(CXXFLAGS) -D DEBUG_MODE=$(DEBUG_MODE) -c $< -o $@ -I$(INCLUDES_DIR)
 
 $(OBJS_DIR):
 	mkdir -p $(OBJS_DIR)
@@ -44,7 +51,7 @@ $(OBJS_DIR):
 -include $(DEPENDENCIES)
 
 debug: fclean
-	DEBUG=1 make
+	DEBUG_MODE=1 make
 
 clean:
 	rm -rf $(OBJS_DIR)

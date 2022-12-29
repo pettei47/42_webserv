@@ -12,7 +12,7 @@ class Config
     void      _validate_config();
     void      _complete_config();
     Server    _default_server();
-    Location  _default_Location();
+    Location  _default_location();
     Location  _parse_location(std::string src, size_t line_start, size_t line_end);
     bool      _check_redirect_status(std::string status);
 
@@ -20,7 +20,7 @@ class Config
     Config();
     Config(std::string filepath);
     ~Config();
-    Config&             oparator=(const Config& other);
+    Config&             operator=(const Config& other);
     std::vector<Server> get_servers();
     void                show_servers();
     std::vector<Server> _servers;

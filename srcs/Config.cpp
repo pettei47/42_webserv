@@ -21,17 +21,15 @@ Config::~Config() {}
  * @param filepath: string 設定ファイルの相対パス
  */
 
-void  Config::_parse_config(std::stiring filepath)
+void  Config::_parse_config(std::string filepath)
 {
   std::string               file_content;
-  size_t                    i;
   size_t                    size;
   std::vector<std::string>  line;
 
-  i = 0;
   file_content = read_file(filepath);
   size = count_lines(file_content);
-  for (size_t i = 0, i < size - 1, i++)
+  for (size_t i = 0; i < size - 1; i++)
   {
     if (!is_skip(file_content, i))
     {
@@ -58,7 +56,7 @@ void  Config::_parse_server(std::string src, size_t start, size_t end)
 {
   Server  server = _default_server();
 
-  for (size_t i = start + 1, i < end, ++i)
+  for (size_t i = start + 1; i < end; ++i)
   {
     if (!is_skip(src, i))
     {
@@ -81,15 +79,15 @@ void  Config::_parse_server(std::string src, size_t start, size_t end)
  * @param i: server contextの開始位置
  * @param sever: server構造体
  */
-void  Config::_parse_server_property(std:;string, src, size_t start, Server server)
+void  Config::_parse_server_property(std::string src, size_t start, Server& server)
 {
   std::vector<std::string>  line = parse_property(src, start, "server");
   size_t                    line_size = line.size();
 
-  if (line[0] == server_propaties[0]) // TODO: server_properties[]の各要素名をenumにしたい。
+  if (line[0] == server_properties[0]) // TODO: server_properties[]の各要素名をenumにしたい。
   {
     if (line_size != 3)
-      throw ParseException(i, std::string(server_properties[0]) + " <port> <host>;");
+      throw ParseException(start, std::string(server_properties[0]) + " <port> <host>;");
     server.port = convert_to_size_t(line[1], start);
     // line[1]が数字ではないときのチェックがなさそう？ -> convert_to~でチェックしてた。
     server.host = line[2];
@@ -103,7 +101,7 @@ void  Config::_parse_server_property(std:;string, src, size_t start, Server serv
   if (line[0] == server_properties[2])
   {
     if (line_size != 3)
-      throw ParseException(n, std::string(server_properties[2]) + "<code> <file>;");
+      throw ParseException(start, std::string(server_properties[2]) + "<code> <file>;");
     server.error_pages[convert_to_size_t(line[1], start)] = line[2];
     // line[1]が数値にできないとき死にそう -> convert_to~でチェックしてた。
   }
@@ -127,9 +125,9 @@ Location  Config::_parse_location(std::string src, size_t start, size_t end)
   std::vector<std::string>  line = split_white_space(get_line(src, start));
 
   if (line.size() != 3)
-    throw ParseExceptipn(start, "Location should have a name."); // TODO: name以外がないときのエラーの可能性もありそう。
+    throw ParseException(start, "Location should have a name."); // TODO: name以外がないときのエラーの可能性もありそう。
   location.name = line[1];
-  for (size_t i = start + 1: i < end; ++i)
+  for (size_t i = start + 1; i < end; ++i)
   {
     if (!is_skip(src, i))
       _parse_location_property(src, i, location);
@@ -161,19 +159,19 @@ void  Config::_parse_location_property(std::string src, size_t start, Location& 
   if (line[0] == route_properties[1]) // TODO:route_properties[]の各要素名をenumにしたい。
     location.root = line[1];
   if (line[0] == route_properties[2])
-    location.autoindex = param_to_bool(line[i], start);
+    location.autoindex = param_to_bool(line[1], start);
   if (line[0] == route_properties[3])
   {
     if (line_size < 2)
       throw ParseException(start, std::string(route_properties[3]) + "index is empty.");
-    locatuon.index.erase(location.index.begin());
+    location.index.erase(location.index.begin());
     for (size_t i = 1; i < line_size; i++)
       location.index.push_back(line[i]);
   }
   if (line[0] == route_properties[4])
     location.cgi_path = line[1];
   if (line[0] == route_properties[5])
-    location.upload_enable - param_to_bool(line[1], start);
+    location.upload_enable = param_to_bool(line[1], start);
   if (line[0] == route_properties[6])
     location.upload_path = line[1];
   if (line[0] == route_properties[7])
@@ -181,13 +179,13 @@ void  Config::_parse_location_property(std::string src, size_t start, Location& 
     if (line_size != 2)
       throw ParseException(start, std::string(route_properties[7]) + " <size[K,M,G]>;");
     location.client_max_body_size = convert_to_size_t(line[1], start);
-    last = line[1][line[1].size() - 1];
+    char  last = line[1][line[1].size() - 1];
     if(last == 'K' || last == 'k')
-      l.client_max_body_size *= 1024;
+      location.client_max_body_size *= 1024;
     else if(last == 'M' || last == 'm')
-      l.client_max_body_size *= 1024 * 1024;
+      location.client_max_body_size *= 1024 * 1024;
     else if(last == 'G' || last == 'G')
-      l.client_max_body_size *= 1024 * 1024 * 1024;
+      location.client_max_body_size *= 1024 * 1024 * 1024;
     else if(!std::isdigit(last))
       throw ParseException(start, std::string(route_properties[7]) + " <size[K,M,G]>;");
   }
@@ -206,7 +204,7 @@ void  Config::_parse_location_property(std::string src, size_t start, Location& 
  */
 bool  Config::_check_redirect_status(std::string status)
 {
-  return (status == "301" || status == "302" || status == "303" || status == "307" || status == "308")
+  return (status == "301" || status == "302" || status == "303" || status == "307" || status == "308");
 }
 
 /**
@@ -296,7 +294,7 @@ void  Config::show_servers()
       it_error_page++;
     }
     it_location = _servers[i].locations.begin();
-    while (it_location != _servers[i].locations.end());
+    while (it_location != _servers[i].locations.end())
     {
       std::cout << "## Location: " << it_location->name << std::endl;
       std::cout << "   - methods: ";
