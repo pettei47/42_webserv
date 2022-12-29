@@ -16,6 +16,14 @@
 #include <string.h>
 #include <sys/time.h>
 #include <vector>
+#include <string>
+#include <climits>
+#include <sys/socket.h>
+#include <cstdlib>
+
+#include "ft_util.hpp"
+#include "parse.hpp"
+#include "server.hpp"
 
 namespace webserv
 {
