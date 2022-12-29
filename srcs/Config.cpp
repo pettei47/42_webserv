@@ -86,7 +86,7 @@ void  Config::_parse_server_property(std:;string, src, size_t start, Server serv
   std::vector<std::string>  line = parse_property(src, start, "server");
   size_t                    line_size = line.size();
 
-  if (line[0] == server_propaties[0])  // TODO: server_properties[]の各要素名をenumにしたい。
+  if (line[0] == server_propaties[0]) // TODO: server_properties[]の各要素名をenumにしたい。
   {
     if (line_size != 3)
       throw ParseException(i, std::string(server_properties[0]) + " <port> <host>;");

@@ -8,6 +8,41 @@ extern const char* server_properties[];
 extern const char* route_properties[];
 extern const char* methods[];
 
+enum  server_properties
+{
+  PROP_LISTEN,
+  PROP_SERVER_NAME,
+  PROP_ERROR_PAGE,
+  PROP_SERVER_ROOT,
+};
+
+enum  route_properties
+{
+  PROP_METHOD,
+  PROP_ROUTE_ROOT,
+  PROP_AUTOINDEX,
+  PROP_INDEX,
+  PROP_CGI_PATH,
+  PROP_UPLOAD_ENABLE,
+  PROP_UPLOAD_PATH,
+  PROP_CLIENT_MAX_BODY_SIZE,
+  PROP_RETURN,
+  PROP_ZERO,
+}
+
+enum  http_methods
+{
+  HTTP_GET,
+  HTTP_HEAD,
+  HTTP_POST,
+  HTTP_PUT,
+  HTTP_DELETE,
+  HTTP_CONNECT,
+  HTTP_OPTIONS,
+  HTTP_TRACE,
+  HTTP_ZERO,
+}
+
 size_t                    count_lines(std::string src);
 size_t                    get_closing_bracket(std::string src, size_t line);
 std::vector<std::string>  parse_property(std::string src, size_t line, std::string object);
