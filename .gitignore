@@ -1,4 +1,5 @@
 .vscode
+python3.8
 webserv
 **/*.o
-python3.8
+**/*.d
