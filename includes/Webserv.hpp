@@ -1,5 +1,5 @@
-#ifndef WEBSERVER_HPP
-#define WEBSERVER_HPP
+#ifndef WEBSERV_HPP
+#define WEBSERV_HPP
 
 #if DEBUG_ACTIVE == 1
 #	define DEBUG(x) std::cout << x << std::endl;

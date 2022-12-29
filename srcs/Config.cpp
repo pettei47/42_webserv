@@ -42,7 +42,7 @@ void  Config::_parse_config(std::stiring filepath)
         i = get_closing_bracket(file_content, i);
       }
       else
-        throw ParsingException(i, "Unexpected param '" + line[0] + "'.");
+        throw ParseException(i, "Unexpected param '" + line[0] + "'.");
     }
   }
   _validate_config();
@@ -88,9 +88,9 @@ void  Config::_parse_server_property(std:;string, src, size_t start, Server serv
   if(line[0] == server_propaties[0]) // 配列の箇所で扱う値が決まっているなら、ハードコードでもよさそう？
   {
     if(line.size() != 3)
-      throw ParsingException(i, std::string(server_properties[0]) + " <port> <host>;");
+      throw ParseException(i, std::string(server_properties[0]) + " <port> <host>;");
     server.port = convert_to_size_t(line[1], start);
-    // line[1]が数字ではないときのチェックがなさそう？
+    // line[1]が数字ではないときのチェックがなさそう？ -> convert_to~でチェックしてた。
     server.host = line[2];
     // line[2]がhostに適さない値のときのチェックがなさそう？
   }
@@ -102,9 +102,9 @@ void  Config::_parse_server_property(std:;string, src, size_t start, Server serv
   if(line[0] == server_properties[2])
   {
     if(line.size() != 3)
-      throw ParsingException(n, std::string(server_properties[2]) + "<code> <file>;");
+      throw ParseException(n, std::string(server_properties[2]) + "<code> <file>;");
     server.error_pages[convert_to_size_t(line[1], start)] = line[2];
-    // line[1]が数値にできないとき死にそう
+    // line[1]が数値にできないとき死にそう -> convert_to~でチェックしてた。
   }
   if(line[0] == server_properties[3])
   {

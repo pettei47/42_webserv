@@ -1,10 +1,10 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-#include "Parser.hpp"
-#include "Server.hpp"
-#include "Utility.hpp"
-#include "WebServ.hpp"
+#include "parse.hpp"
+#include "server.hpp"
+#include "utility.hpp"
+#include "webserv.hpp"
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -25,14 +25,13 @@ class Config
     Location  _parse_location(std::string src, size_t line_start, size_t line_end);
     bool      _check_redirect_status(std::string stat);
   public:
-    std::vector<Server> _servers;
     Config();
     Config(std::string filepath);
     Config& oparator=(const Config& other);
     ~Config(void);
     std::vector<Server> get_servers();
     void  show_server_info();
+    std::vector<Server> _servers;
 };
-
 
 #endif
