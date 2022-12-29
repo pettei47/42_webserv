@@ -210,7 +210,62 @@ bool  Config::_check_redirect_status(std::string status)
 }
 
 /**
+ * @brief デフォルトのsever構造体を返す
+ */
+Server  Config::_default_server()
+{
+	Server server;
+
+	server.names.push_back("");
+	server.port = 8080;
+	server.host = "127.0.0.1";
+	server.root = webserv::DEFAULT_ROOT;
+	return (server);
+}
+
+/**
+ * @brief デフォルトのLocation構造体を返す
+ */
+Location  Config::_default_location()
+{
+	Location location;
+
+	location.name = "/";
+	location.root = "";
+	location.index.push_back("index.html");
+	location.autoindex = false;
+	location.cgi_path = "";
+	location.upload_enable = false;
+	location.upload_path = "./test/upload/";
+	location.client_max_body_size = 1 * 1024 * 1024;
+	return (location);
+}
+
+/**
+ * @brief confファイルに必要な項目が足りていない場合、補完する
+ */
+void  Config::_complete_config(void)
+{
+  size_t  servers_size = _servers.size();
+
+	for(size_t i = 0; i < servers_size; ++i)
+	{
+    size_t  locations_size = _servers[i].locations.size();
+		if(locations_size == 0)
+			_servers[i].locations.push_back(_default_location());
+		for(size_t j = 0; j < locations_size; ++j)
+		{
+			if(_servers[i].locations[j].methods.size() == 0)
+				_servers[i].locations[j].methods.push_back("GET");
+			if(_servers[i].locations[j].root.size() == 0)
+				_servers[i].locations[j].root = _servers[i].root;
+		}
+	}
+}
+
+/**
  * @brief server構造体の情報を出力する、デバッグ用
+ * TODO:これはserver構造体をclass化してそこにメソッド持たせた方が綺麗な気がする…。
  */
 void  Config::show_servers()
 {
@@ -219,12 +274,14 @@ void  Config::show_servers()
   std::map<int, std::string>::iterator  it_redirect;
   size_t                                servers_size = _servers.size();
 
-
   for (size_t i = 0; i < servers_size; i++)
   {
     std::cout << "## Server[" << i << "]" << std::endl;
     std::cout << "   - server_name: ";
-    for (size_t j = 0; j < _servers[i].names.size(); j++)
+
+    size_t  names_size = _servers[i].names.size();
+
+    for (size_t j = 0; j < names_size; j++)
       std::cout << _servers[i].names[j] << ", ";
     std::cout << std::endl;
     std::cout << "   - host: " << _servers[i].host << std::endl;
@@ -243,11 +300,17 @@ void  Config::show_servers()
     {
       std::cout << "## Location: " << it_location->name << std::endl;
       std::cout << "   - methods: ";
-      for (size_t j = 0; j < it_location->methods.size(); ++j)
+
+      size_t  methods_size = it_location->methods.size();
+
+      for (size_t j = 0; j < methods_size; ++j)
         std::cout << it_location->methods[j] << ", ";
       std::cout << std::endl;
       std::cout << "   - index: ";
-      for (size_t j = 0; j < it_location->index.size(); ++j)
+
+      size_t  index_size = it_location->index.size();
+
+      for (size_t j = 0; j < index_size; ++j)
         std::cout << it_location->index[j] << ", ";
       std::cout << std::endl;
       std::cout << "   - root: " << it_location->root << std::endl;
