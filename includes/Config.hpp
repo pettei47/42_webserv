@@ -22,7 +22,7 @@ class Config
     ~Config();
     Config&             oparator=(const Config& other);
     std::vector<Server> get_servers();
-    void                show_server_info();
+    void                show_servers();
     std::vector<Server> _servers;
 };
 

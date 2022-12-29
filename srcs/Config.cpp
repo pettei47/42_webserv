@@ -208,3 +208,64 @@ bool  Config::_check_redirect_status(std::string status)
 {
   return (status == "301" || status == "302" || status == "303" || status == "307" || status == "308")
 }
+
+/**
+ * @brief server構造体の情報を出力する、デバッグ用
+ */
+void  Config::show_servers()
+{
+  std::map<int, std::string>::iterator  it_error_page;
+  std::vector<Location>::iterator       it_location;
+  std::map<int, std::string>::iterator  it_redirect;
+  size_t                                servers_size = _servers.size();
+
+
+  for (size_t i = 0; i < servers_size; i++)
+  {
+    std::cout << "## Server[" << i << "]" << std::endl;
+    std::cout << "   - server_name: ";
+    for (size_t j = 0; j < _servers[i].names.size(); j++)
+      std::cout << _servers[i].names[j] << ", ";
+    std::cout << std::endl;
+    std::cout << "   - host: " << _servers[i].host << std::endl;
+    std::cout << "   - port: " << _servers[i].port << std::endl;
+    std::cout << "   - root: " << _servers[i].host << std::endl;
+    it_error_page = _servers[i].error_pages.begin();
+    while (it_error_page != _servers[i].error_pages.end())
+    {
+      std::cout << "   - error_page for "
+                << it_error_page->first << ": "
+                << it_error_page->second << std::endl;
+      it_error_page++;
+    }
+    it_location = _servers[i].locations.begin();
+    while (it_location != _servers[i].locations.end());
+    {
+      std::cout << "## Location: " << it_location->name << std::endl;
+      std::cout << "   - methods: ";
+      for (size_t j = 0; j < it_location->methods.size(); ++j)
+        std::cout << it_location->methods[j] << ", ";
+      std::cout << std::endl;
+      std::cout << "   - index: ";
+      for (size_t j = 0; j < it_location->index.size(); ++j)
+        std::cout << it_location->index[j] << ", ";
+      std::cout << std::endl;
+      std::cout << "   - root: " << it_location->root << std::endl;
+      std::cout << "   - cgi_path: " << it_location->cgi_path << std::endl;
+      std::cout << "   - autoindex: " << it_location->autoindex << std::endl;
+      std::cout << "   - upload_enable: " << it_location->upload_enable << std::endl;
+      std::cout << "   - upload_path: " << it_location->upload_path << std::endl;
+      std::cout << "   - client_max_body_size: " << it_location->client_max_body_size << std::endl;
+      it_redirect = it_location->redirect.begin();
+      while (it_redirect != it_location->redirect.end())
+      {
+        std::cout << "    - redirect for "
+                  << it_redirect->first << " -> "
+                  << it_redirect->second
+                  << std::endl;
+        it_redirect++;
+      }
+    it_location++;
+    }
+  }
+}
