@@ -1,8 +1,8 @@
 #include "ft_util.hpp"
 
-namespace ft_util
+namespace ft
 {
-  bool ft_is_upper(std::string str)
+  bool is_upper(std::string str)
   {
     size_t len = str.length();
     for (size_t i = 0; i < len; i++)
@@ -13,7 +13,7 @@ namespace ft_util
     return true;
   }
 
-  std::string ft_to_titlecase(std::string const& str)
+  std::string to_titlecase(std::string const& str)
   {
     std::string ret;
     size_t      size = str.size();
@@ -34,12 +34,12 @@ namespace ft_util
     return ret;
   }
 
-  bool  ft_is_space(char c)
+  bool  is_space(char c)
   {
     return (c == ' ' || c == '\t');
   }
 
-  std::string ft_trim_space(const std::string& str)
+  std::string trim_space(const std::string& str)
   {
     size_t  first = str.find_first_not_of(" \t");
 
@@ -50,7 +50,7 @@ namespace ft_util
     return str.substr(first, last - first + 1);
   }
 
-  std::string ft_get_file_ext(const std::string& filepath)
+  std::string get_file_ext(const std::string& filepath)
   {
     size_t  dot_index = filepath.find_last_of(".");
 
@@ -59,5 +59,5 @@ namespace ft_util
     return filepath.substr(dot_index + 1);
   }
 
-  
+
 }

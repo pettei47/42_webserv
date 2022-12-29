@@ -6,7 +6,7 @@
 #include <string>
 #include <sys/socket.h>
 
-namespace ft_util
+namespace ft
 {
   static const std::string CRLF = "\r\n";
 
@@ -22,24 +22,24 @@ namespace ft_util
  * @param n: streamに流せるもの(intなど)
  * @return 変換したstring
   */
-  template <typename T> std::string ft_to_string(const T& src)
+  template <typename T> std::string to_string(const T& src)
   {
     std::ostringstream ostream;
     ostream << src;
     return ostream.str();
   }
 
-  bool        ft_is_upper(std::string src);
-  bool        ft_is_space(char c);
-  std::string ft_to_titlecase(std::string const& str);
-  std::string ft_trim_space(const std::string& str);
-  std::string ft_get_file_ext(const std::string& filepath);
-  void        ft_set_fd(int fd, fd_set& set, int& max_fd);
-  bool        ft_isset_clear_fd(int fd, fd_set& set);
-  size_t      ft_unsigned_decimal_str_to_ssize_t(std::string str);
-  size_t      ft_hex_str_to_ssize_t(std::string str);
-  bool        ft_end_with(const std::string& str, char c);
-  std::string ft_clean_uri(std::string const& uri);
-} // namespace ft_util
+  bool        is_upper(std::string src);
+  bool        is_space(char c);
+  std::string to_titlecase(std::string const& str);
+  std::string trim_space(const std::string& str);
+  std::string get_file_ext(const std::string& filepath);
+  void        set_fd(int fd, fd_set& set, int& max_fd);
+  bool        isset_clear_fd(int fd, fd_set& set);
+  size_t      unsigned_decimal_str_to_ssize_t(std::string str);
+  size_t      hex_str_to_ssize_t(std::string str);
+  bool        end_with(const std::string& str, char c);
+  std::string clean_uri(std::string const& uri);
+} // namespace ft
 
 #endif
