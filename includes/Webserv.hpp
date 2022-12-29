@@ -24,6 +24,9 @@
 #include "ft_util.hpp"
 #include "parse.hpp"
 #include "server.hpp"
+#include "ft_signal.hpp"
+#include "Config.hpp"
+
 
 namespace webserv
 {

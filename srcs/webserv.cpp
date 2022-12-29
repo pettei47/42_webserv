@@ -1,6 +1,4 @@
 #include "webserv.hpp"
-#include "ft_signal.hpp"
-#include "Config.hpp"
 
 int main(int argc, char **argv)
 {
