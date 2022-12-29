@@ -200,3 +200,11 @@ void  Config::_parse_location_property(std::string src, size_t start, Location& 
     location.redirect[convert_to_size_t(line[1], start)] = line[2];
   }
 }
+
+/**
+ * @brief redirect directiveのstatusが正しいか確認する
+ */
+bool  Config::_check_redirect_status(std::string status)
+{
+  return (status == "301" || status == "302" || status == "303" || status == "307" || status == "308")
+}

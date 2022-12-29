@@ -14,7 +14,7 @@ class Config
     Server    _default_server();
     Location  _default_Location();
     Location  _parse_location(std::string src, size_t line_start, size_t line_end);
-    bool      _check_redirect_status(std::string stat);
+    bool      _check_redirect_status(std::string status);
 
   public:
     Config();
