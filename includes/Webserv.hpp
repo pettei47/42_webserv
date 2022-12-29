@@ -33,7 +33,7 @@ public:
     bzero(time_buffer, 100);
     gettimeofday(&current_time, NULL);
     strftime(time_buffer, 100, "%F %R:%S", localtime(&current_time.tv_sec));
-    if(id)
+    if (id)
       std::cout << "[" << time_buffer << "] : [" << id << "] " << msg << std::endl;
     else
       std::cout << "[" << time_buffer << "] : " << msg << std::endl;
