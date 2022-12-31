@@ -182,7 +182,6 @@ bool  is_skip(std::string line)
 /**
  * @brief std::stringをsize_tに変換
  */
-// TODO: 負の数渡したときどうなるのか確認。
 size_t  convert_to_size_t(std::string item, size_t line_num)
 {
   size_t              value;
