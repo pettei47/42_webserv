@@ -188,7 +188,7 @@ size_t  convert_to_size_t(std::string item, size_t line_num)
   size_t              value;
   std::istringstream  convert(item);
 
-  if (!(convert >> value))
+  if (!(convert >> value) || item[0] == '-')
     throw ParseException(line_num, "`" + item + "` is not a positive integer");
   return (value);
 }
