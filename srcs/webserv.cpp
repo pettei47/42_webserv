@@ -2,6 +2,8 @@
 
 int main(int argc, char **argv)
 {
+  return health_check();
+//  if (health_check()) return 1;
   Config  config;
   char*   path = (char *)"conf/default.conf";
 
