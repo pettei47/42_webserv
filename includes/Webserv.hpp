@@ -38,7 +38,7 @@ class Log
 public:
   Log(std::string msg, size_t id = 0)
   {
-#if DEBUG == 1
+#if DEBUG_MODE == 1
     struct timeval current_time;
     char time_buffer[100];
     bzero(time_buffer, 100);
