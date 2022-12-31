@@ -22,6 +22,7 @@ OBJS							=		$(addprefix $(OBJS_DIR), $(OBJ))
 DEPENDENCIES			=		$(OBJS:.o=.d)
 
 DEBUG_MODE				=		0
+TEST_MODE					=		0
 
 ifeq ($(shell uname),Linux)
 	OS_LINUX = 1
@@ -35,7 +36,7 @@ $(NAME): $(PYTHON) $(OBJS_DIR) $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
-	$(CXX) $(CXXFLAGS) -D DEBUG_MODE=$(DEBUG_MODE) -c $< -o $@ -I$(INCLUDES_DIR)
+	$(CXX) $(CXXFLAGS) -D DEBUG_MODE=$(DEBUG_MODE) -D TEST_MODE=$(TEST_MODE) -c $< -o $@ -I$(INCLUDES_DIR)
 
 $(OBJS_DIR):
 	mkdir -p $(OBJS_DIR)
@@ -44,6 +45,9 @@ $(OBJS_DIR):
 
 debug:
 	make re DEBUG_MODE=1
+
+test:
+	make re TEST_MODE=1
 
 clean:
 	rm -rf $(OBJS_DIR)

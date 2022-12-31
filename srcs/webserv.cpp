@@ -2,8 +2,9 @@
 
 int main(int argc, char **argv)
 {
+#if TEST_MODE == 1
   return health_check();
-//  if (health_check()) return 1;
+#endif
   Config  config;
   char*   path = (char *)"conf/default.conf";
 
