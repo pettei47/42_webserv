@@ -7,23 +7,12 @@ PYTHON_DIR				:=	python/
 PYTHON						:=	$(PYTHON_DIR)python3.8
 
 SRCS_DIR					=		srcs/
-SRCS							=		webserv.cpp \
-											ft_util.cpp \
-											ft_signal.cpp \
-											Config.cpp \
-											parse.cpp \
-											tester.cpp \
+SRCS							=		$(shell cd $(SRCS_DIR); find *.cpp)
 
 SRCS_PREFIXED			=		$(addprefix $(SRCS_DIR), $(SRCS))
 
 INCLUDES_DIR			= 	includes/
-INCLUDES					= 	webserv.hpp \
-											ft_util.hpp \
-											ft_signal.hpp \
-											Config.hpp \
-											parse.hpp \
-											server.hpp \
-											tester.hpp \
+INCLUDES					= 	$(shell cd $(INCLUDES_DIR); find *.hpp)
 
 INCLUDES_PREFIXED	= $(addprefix $(INCLUDES_DIR), $(INCLUDES))
 
