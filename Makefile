@@ -50,8 +50,8 @@ $(OBJS_DIR):
 
 -include $(DEPENDENCIES)
 
-debug: fclean
-	DEBUG_MODE=1 make
+debug:
+	make DEBUG_MODE=1
 
 clean:
 	rm -rf $(OBJS_DIR)
@@ -67,4 +67,4 @@ $(PYTHON): $(PYTHON_DIR)
 $(PYTHON_DIR):
 	mkdir -p $(PYTHON_DIR)
 
-.PHONY: all clean fclean re 
+.PHONY: all clean fclean re debug debug_mode

@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 #if DEBUG == 1
 		config.show_server_info();
 #endif
-    Log("Start Server(s)...");
+    Log("Start Server...");
 
     // Cluster Cluster(config);
     // Cluster.loop();

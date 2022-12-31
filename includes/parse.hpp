@@ -27,7 +27,6 @@ enum  route_properties
   PROP_UPLOAD_PATH,
   PROP_CLIENT_MAX_BODY_SIZE,
   PROP_RETURN,
-  PROP_ZERO,
 };
 
 enum  http_methods
@@ -40,18 +39,16 @@ enum  http_methods
   HTTP_CONNECT,
   HTTP_OPTIONS,
   HTTP_TRACE,
-  HTTP_ZERO,
 };
 
 size_t                    count_lines(std::string src);
-size_t                    get_closing_bracket(std::string src, size_t line);
+size_t                    get_close_bracket_line(std::string src, size_t line);
 std::vector<std::string>  parse_property(std::string src, size_t line, std::string object);
-std::vector<std::string>  split_white_space(std::string src);
+std::vector<std::string>  split(std::string src, std::string sep);
 bool                      is_property_name(std::string name, const char** valid_names);
-std::string               read_file(std::string file);
-std::string               get_line(std::string, size_t line);
+std::vector<std::string>  read_file(std::string file);
 bool                      is_skip(std::string src, size_t line);
-bool                      end_with_open_bracket(std::string src, size_t line);
+bool                      is_end_with_open_bracket(std::string src, size_t line);
 size_t                    convert_to_size_t(std::string param, size_t line);
 bool                      param_to_bool(std::string param, size_t line);
 bool                      is_method(std::string method);
@@ -64,8 +61,8 @@ class ParseException: public std::exception
     std::string _msg;
 
   public:
-    ParseException(int line = 0, std::string msg = "Failed to parse the config file.");
-    //  : _msg("Line: " + ft::to_string(line + 1) + ": " + msg){}; // この書き方よくわからん
+    ParseException(int line = 0, std::string msg = "Failed to parse the config file.")
+      : _msg("Line: " + ft::to_string(line + 1) + ": " + msg){};
     ~ParseException() throw(){};
     const char* what() const throw()
     {

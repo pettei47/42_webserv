@@ -16,6 +16,8 @@ class Config
     Location  _parse_location(std::string src, size_t line_start, size_t line_end);
     bool      _check_redirect_status(std::string status);
 
+    std::vector<std::string>  _file_contents;
+
   public:
     Config();
     Config(std::string filepath);
