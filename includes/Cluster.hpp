@@ -12,7 +12,7 @@
 class Cluster
 {
 public:
-	typedef std::list< Socket >::iterator socket_itr;
+	typedef std::list<Socket>::iterator socket_itr;
 
 private:
 	std::list<Socket> _sockets;
@@ -28,7 +28,7 @@ private:
 	static const useconds_t _usleep_time = 500;
 
 public:
-	Cluster(Configuration config);
+	Cluster(Config config);
 	~Cluster();
 	void loop();
 };

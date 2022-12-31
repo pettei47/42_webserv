@@ -23,12 +23,11 @@ DEPENDENCIES			=		$(OBJS:.o=.d)
 
 DEBUG_MODE				=		0
 
-## pythonの取り方を変えたので不要
-# ifeq ($(shell uname),Linux)
-# 	OS_LINUX = 1
-# else
-# 	OS_LINUX = 0
-# endif
+ifeq ($(shell uname),Linux)
+	OS_LINUX = 1
+else
+	OS_LINUX = 0
+endif
 
 all: $(NAME)
 
@@ -55,7 +54,12 @@ fclean: clean
 re: fclean all
 
 $(PYTHON): $(PYTHON_DIR)
-	cp `which python3.8` $(PYTHON_DIR)
+ifeq ($(OS_LINUX), 1)
+	cp python/python3.8_Linux $@
+else
+	cp python/python3.8_Mac $@
+endif
+
 
 $(PYTHON_DIR):
 	mkdir -p $(PYTHON_DIR)

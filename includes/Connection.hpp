@@ -34,12 +34,12 @@ public:
   Connection(Connection const& other);
   Connection& operator=(Connection const& other);
 
-  void recv_request();
-  void close() const;
-  void set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const;
-  bool check_and_handle(fd_set& read_set, fd_set& write_set);
+  void  recv_request();
+  void  close() const;
+  void  set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const;
+  bool  check_and_handle(fd_set& read_set, fd_set& write_set);
 
-  int get_sfd() const;
+  int   get_sfd() const;
   enum phase get_phase() const;
   const HttpResponse* get_response() const;
 };
