@@ -12,6 +12,7 @@ SRCS							=		webserv.cpp \
 											ft_signal.cpp \
 											Config.cpp \
 											parse.cpp \
+											tester.cpp \
 
 SRCS_PREFIXED			=		$(addprefix $(SRCS_DIR), $(SRCS))
 
@@ -22,6 +23,7 @@ INCLUDES					= 	webserv.hpp \
 											Config.hpp \
 											parse.hpp \
 											server.hpp \
+											tester.hpp \
 
 INCLUDES_PREFIXED	= $(addprefix $(INCLUDES_DIR), $(INCLUDES))
 
@@ -32,11 +34,12 @@ DEPENDENCIES			=		$(OBJS:.o=.d)
 
 DEBUG_MODE				=		0
 
-ifeq ($(shell uname),Linux)
-	OS_LINUX = 1
-else
-	OS_LINUX = 0
-endif
+## pythonの取り方を変えたので不要
+# ifeq ($(shell uname),Linux)
+# 	OS_LINUX = 1
+# else
+# 	OS_LINUX = 0
+# endif
 
 all: $(NAME)
 
@@ -63,11 +66,7 @@ fclean: clean
 re: fclean all
 
 $(PYTHON): $(PYTHON_DIR)
-ifeq ($(OS_LINUX), 1)
-	cp python/python3.8_Linux $@
-else
-	cp python/python3.8_Mac $@
-endif
+	cp `which python3.8` $(PYTHON_DIR)
 
 $(PYTHON_DIR):
 	mkdir -p $(PYTHON_DIR)

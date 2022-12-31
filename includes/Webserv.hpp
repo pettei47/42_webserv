@@ -26,7 +26,7 @@
 #include "server.hpp"
 #include "ft_signal.hpp"
 #include "Config.hpp"
-
+#include "tester.hpp"
 
 namespace webserv
 {
