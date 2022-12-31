@@ -16,8 +16,8 @@ int main(int argc, char **argv)
   {
     set_signal();
     config = Config(path);
-#if DEBUG == 1
-		config.show_server_info();
+#if DEBUG_MODE == 1
+		config.show_servers();
 #endif
     Log("Start Server...");
 

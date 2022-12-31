@@ -9,7 +9,9 @@ PYTHON						:=	$(PYTHON_DIR)python3.8
 SRCS_DIR					=		srcs/
 SRCS							=		webserv.cpp \
 											ft_util.cpp \
+											ft_signal.cpp \
 											Config.cpp \
+											parse.cpp \
 
 SRCS_PREFIXED			=		$(addprefix $(SRCS_DIR), $(SRCS))
 
@@ -51,7 +53,7 @@ $(OBJS_DIR):
 -include $(DEPENDENCIES)
 
 debug:
-	make DEBUG_MODE=1
+	make re DEBUG_MODE=1
 
 clean:
 	rm -rf $(OBJS_DIR)

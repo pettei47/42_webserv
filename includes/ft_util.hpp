@@ -1,7 +1,11 @@
 #ifndef FT_UTIL_HPP
 #define FT_UTIL_HPP
 
-#include "webserv.hpp"
+#include <climits>
+#include <sstream>
+#include <string>
+#include <sys/socket.h>
+
 namespace ft
 {
   static const std::string CRLF = "\r\n";

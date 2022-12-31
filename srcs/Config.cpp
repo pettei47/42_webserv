@@ -34,8 +34,8 @@ void  Config::_parse_config(std::string filepath)
       line_items = split(_file_contents[i], " ");
       if (line_items.size() > 0 && line_items[0] == "server")
       {
-        _parse_server(_file_contents, i , get_close_bracket_line(_file_contents[i]));
-        i = get_close_bracket_line(_file_contents[i]);
+        _parse_server(i , get_close_bracket_line(_file_contents, i));
+        i = get_close_bracket_line(_file_contents, i);
       }
       else
         throw ParseException(i, "Unexpected param '" + line_items[0] + "'.");
@@ -46,9 +46,8 @@ void  Config::_parse_config(std::string filepath)
 
 /**
  * @brief confファイルで定義されたserver構造体を配列に追加する
- * @param src: string confファイルの文字列
- * @param start: size_t confファイルの開始位置 == "server {"
- * @param end: size_t confファイルの終了位置 == "}"
+ * @param start: server directiveの開始位置 == "server {"
+ * @param end: server directiveの終了位置 == "}"
  */
 void  Config::_parse_server(size_t start, size_t end)
 {
@@ -61,8 +60,8 @@ void  Config::_parse_server(size_t start, size_t end)
       std::vector<std::string> line_items = split(_file_contents[i], " ");
       if (line_items.size() > 0 && line_items[0] == "location")
       {
-        server.locations.push_back(_parse_location(i, get_close_bracket_line(_file_contents[i])));
-        i = get_close_bracket_line(_file_contents[i]);
+        server.locations.push_back(_parse_location(i, get_close_bracket_line(_file_contents, i)));
+        i = get_close_bracket_line(_file_contents, i);
       }
       else
         _parse_server_property(i, server);
@@ -73,20 +72,18 @@ void  Config::_parse_server(size_t start, size_t end)
 
 /**
  * @brief confファイルからserverのパラメーターを取得し設定する
- * @param src: string confファイルの文字列
- * @param i: server contextの開始位置
+ * @param n: server directiveのチェック位置
  * @param server: server構造体
  */
-// TODO: 説明文と引数が食い違っているのを直す。
-void  Config::_parse_server_property(size_t start, Server& server)
+void  Config::_parse_server_property(size_t n, Server& server)
 {
-  std::vector<std::string>  line_items = parse_property(_file_contents[start], "server");
+  std::vector<std::string>  line_items = parse_property(_file_contents[n], n, "server");
 
   if (line_items[0] == server_properties[0]) // TODO: server_properties[]の各要素名をenumにしたい。
   {
     if (line_items.size() != 3)
-      throw ParseException(start, std::string(server_properties[0]) + " <port> <host>;");
-    server.port = convert_to_size_t(line_items[1], start);
+      throw ParseException(n, std::string(server_properties[0]) + " <port> <host>;");
+    server.port = convert_to_size_t(line_items[1], n);
     // line_items[1]が数字ではないときのチェックがなさそう？ -> convert_to~でチェックしてた。
     server.host = line_items[2];
     // TODO: line_items[2]がhostに適さない値のときのチェックがなさそう？
@@ -99,8 +96,8 @@ void  Config::_parse_server_property(size_t start, Server& server)
   if (line_items[0] == server_properties[2])
   {
     if (line_items.size() != 3)
-      throw ParseException(start, std::string(server_properties[2]) + "<code> <file>;");
-    server.error_pages[convert_to_size_t(line_items[1], start)] = line_items[2];
+      throw ParseException(n, std::string(server_properties[2]) + "<code> <file>;");
+    server.error_pages[convert_to_size_t(line_items[1], n)] = line_items[2];
     // line_items[1]が数値にできないとき死にそう -> convert_to~でチェックしてた。
   }
   if (line_items[0] == server_properties[3])
@@ -113,8 +110,8 @@ void  Config::_parse_server_property(size_t start, Server& server)
 /**
  * @brief Location構造体を返却する
  * @param src: string confファイルの文字列
- * @param start: contextの開始位置 == "location / {"
- * @param end: location contextの終了位置, == "}"
+ * @param start: location directiveの開始位置 == "location / {"
+ * @param end: location directiveの終了位置, == "}"
  * @return location構造体
  */
 Location  Config::_parse_location(size_t start, size_t end)
@@ -128,54 +125,53 @@ Location  Config::_parse_location(size_t start, size_t end)
   for (size_t i = start + 1; i < end; ++i)
   {
     if (!is_skip(_file_contents[i]))
-      _parse_location_property(src, i, location);
+      _parse_location_property(i, location);
   }
   return (location);
 }
 
 /**
  * @brief 設定ファイルからLocationのパラメーターを取得し設定する
- * @param src: 設定ファイルの文字列
- * @param start: Location contextの開始位置
+ * @param n: Location directiveのチェック位置
  * @param location: Location構造体
  */
-void  Config::_parse_location_property(size_t start, Location& location)
+void  Config::_parse_location_property(size_t n, Location& location)
 {
-  std::vector<std::string>  line_items = parse_property(_file_contents[start], "route");
+  std::vector<std::string>  line_items = parse_property(_file_contents[n], n, "location");
 
-  if (line_items[0] == route_properties[0]) // lineがNULLのときセグフォしそう -> parse_property()でline.size() <= 1 だとエラーになっている
+  if (line_items[0] == location_properties[0]) // lineがNULLのときセグフォしそう -> parse_property()でline.size() <= 1 だとエラーになっている
   {
     for (size_t i = 1; i < line_items.size(); ++i)
     {
       if (!is_method(line_items[i]))
-        throw ParseException(start, "'" + line_items[i] + "' is invalid method.");
+        throw ParseException(n, "'" + line_items[i] + "' is invalid method.");
       else
         location.methods.push_back(line_items[i]);
     }
   }
-  if (line_items[0] == route_properties[1]) // TODO:route_properties[]の各要素名をenumにしたい。
+  if (line_items[0] == location_properties[1]) // TODO:location_properties[]の各要素名をenumにしたい。
     location.root = line_items[1];
-  if (line_items[0] == route_properties[2])
-    location.autoindex = param_to_bool(line_items[1], start);
-  if (line_items[0] == route_properties[3])
+  if (line_items[0] == location_properties[2])
+    location.autoindex = autoindex_to_bool(line_items[1], n);
+  if (line_items[0] == location_properties[3])
   {
     if (line_items.size() < 2)
-      throw ParseException(start, std::string(route_properties[3]) + "index is empty.");
+      throw ParseException(n, std::string(location_properties[3]) + "index is empty.");
     location.index.erase(location.index.begin());
     for (size_t i = 1; i < line_items.size(); i++)
       location.index.push_back(line_items[i]);
   }
-  if (line_items[0] == route_properties[4])
+  if (line_items[0] == location_properties[4])
     location.cgi_path = line_items[1];
-  if (line_items[0] == route_properties[5])
-    location.upload_enable = param_to_bool(line_items[1], start);
-  if (line_items[0] == route_properties[6])
+  if (line_items[0] == location_properties[5])
+    location.upload_enable = autoindex_to_bool(line_items[1], n);
+  if (line_items[0] == location_properties[6])
     location.upload_path = line_items[1];
-  if (line_items[0] == route_properties[7])
+  if (line_items[0] == location_properties[7])
   {
     if (line_items.size() != 2)
-      throw ParseException(start, std::string(route_properties[7]) + " <size[K,M,G]>;");
-    location.client_max_body_size = convert_to_size_t(line_items[1], start);
+      throw ParseException(n, std::string(location_properties[7]) + " <size[K,M,G]>;");
+    location.client_max_body_size = convert_to_size_t(line_items[1], n);
     char  last = line_items[1][line_items[1].size() - 1];
     if(last == 'K' || last == 'k')
       location.client_max_body_size *= 1024;
@@ -184,15 +180,15 @@ void  Config::_parse_location_property(size_t start, Location& location)
     else if(last == 'G' || last == 'G')
       location.client_max_body_size *= 1024 * 1024 * 1024;
     else if(!std::isdigit(last))
-      throw ParseException(start, std::string(route_properties[7]) + " <size[K,M,G]>;");
+      throw ParseException(n, std::string(location_properties[7]) + " <size[K,M,G]>;");
   }
-  if (line_items[0] == route_properties[8])
+  if (line_items[0] == location_properties[8])
   {
     if (line_items.size() != 3 || !_check_redirect_status(line_items[1]))
-      throw ParseException(start, std::string(route_properties[8]) + " <status: 3xx> <URL>;");
+      throw ParseException(n, std::string(location_properties[8]) + " <status: 3xx> <URL>;");
     if (location.redirect.size() != 0)
-      throw ParseException(start, std::string(route_properties[8]) + " multiple return directive.");
-    location.redirect[convert_to_size_t(line_items[1], start)] = line_items[2];
+      throw ParseException(n, std::string(location_properties[8]) + " multiple return directive.");
+    location.redirect[convert_to_size_t(line_items[1], n)] = line_items[2];
   }
 }
 
@@ -254,6 +250,41 @@ void  Config::_complete_config(void)
         _servers[i].locations[j].methods.push_back("GET");
       if(_servers[i].locations[j].root.size() == 0)
         _servers[i].locations[j].root = _servers[i].root;
+    }
+  }
+}
+
+/**
+ * @brief confファイルが正しいものかチェックする
+ */
+void Config::_validate_config()
+{
+  if(_servers.size() == 0)
+    throw ParseException(0, "Your configuration file must provide at least one server.");
+  for(size_t i = 0; i < _servers.size(); ++i)
+  {
+    for(size_t j = 0; j < _servers[i].locations.size(); ++j)
+    {
+      if(_servers[i].locations[j].cgi_path.size() > 0 &&
+        !check_path(_servers[i].locations[j].cgi_path))
+        throw ParseException(0,
+                    "The cgi path '" + _servers[i].locations[j].cgi_path +
+                    "' is not a valid file.");
+    }
+  }
+  for(size_t i = 0; i < _servers.size(); ++i)
+  {
+    for(size_t j = 0; j < _servers.size(); ++j)
+    {
+      if(i != j)
+      {
+        if(_servers[i].host == "127.0.0.1")
+          _servers[i].host = "localhost";
+        if(_servers[j].host == "127.0.0.1")
+          _servers[j].host = "localhost";
+        //if(_servers[i].host == _servers[j].host && _servers[i].port == _servers[j].port)
+        //throw ParseException(0, "Two servers have the same host and port.");
+      }
     }
   }
 }

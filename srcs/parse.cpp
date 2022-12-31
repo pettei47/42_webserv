@@ -1,14 +1,14 @@
 #include "parse.hpp"
 
 const char* server_properties[5] = {
-  "reten",
+  "listen",
   "server_name",
   "error_page",
   "root",
   0,
 };
 
-const char* route_properties[11] = {
+const char* location_properties[11] = {
   "method",
   "root",
   "autoindex",
@@ -40,21 +40,20 @@ const char* methods[9] = {
  * @return contextの終了位置
  * @example "server {\na\nb\nc\n}" with line 0 will return line 4
  */
-int  get_close_bracket_line(std::string src)
+size_t  get_close_bracket_line(std::vector<std::string> file_contents, size_t start)
 {
   size_t      ret = start + 1;
-  size_t      size = count_lines(src);
   size_t      open_brackets = 0;
 
-  if (!is_end_with_open_bracket(src))
+  if (!is_end_with_open_bracket(file_contents[start]))
     throw ParseException(start, "Expected '{'.");
-  while (ret < size)
+  while (ret < file_contents.size())
   {
-    if (!is_skip(src, ret))
+    if (!is_skip(file_contents[ret]))
     {
-      if (is_end_with_open_bracket(src, ret))
+      if (is_end_with_open_bracket(file_contents[ret]))
         open_brackets++;
-      if (get_line(src, ret) == "}")
+      if (file_contents[ret] == "}")
       {
         if (open_brackets == 0)
           return (ret);
@@ -63,6 +62,7 @@ int  get_close_bracket_line(std::string src)
     }
     ret++;
   }
+  return (0);
 }
 
 /**
@@ -87,7 +87,7 @@ bool  is_end_with_open_bracket(std::string line)
  */
 std::vector<std::string>  read_file(std::string filepath)
 {
-  char        buffer[BUFFER_SIZE + 1]{};
+  char        buffer[BUFFER_SIZE + 1] = {};
   int         fd = open(filepath.c_str(), O_RDONLY);
   int         rc;
   std::string file_content;
@@ -117,20 +117,52 @@ std::vector<std::string>  split(std::string content, std::string separator)
   std::vector<std::string> ret;
 
   if (separator_length == 0) {
-    ret.push_back(string);
+    ret.push_back(content);
   } else {
     size_t offset = std::string::size_type(0);
     while (1) {
-      size_t pos = string.find(separator, offset);
+      size_t pos = content.find(separator, offset);
       if (pos == std::string::npos) {
-        ret.push_back(ft::trim_space(string.substr(offset)));
+        ret.push_back(ft::trim_space(content.substr(offset)));
         break;
       }
-      ret.push_back(ft::trim_space(string.substr(offset, pos - offset)));
+      ret.push_back(ft::trim_space(content.substr(offset, pos - offset)));
       offset = pos + separator_length;
     }
   }
   return (ret);
+}
+
+/**
+ * @brief parameterが適切かのチェックを行い、paramsを分割してvectorで返す
+ * @example "listen 80 localhost;"  -> "listen", "80" "localhost" のvector
+ */
+std::vector<std::string>  parse_property(std::string line, size_t n, std::string directive)
+{
+  std::vector<std::string>  result;
+
+  if (line[line.size() - 1] != ';')
+    throw ParseException(n, "Expected ';'.");
+  line.erase(line.size() - 1, 1);
+  result = split(line, " ");
+  if (result.size() < 2)
+    throw ParseException(n, "Properties should have at least one value.");
+  if (!is_property_name(result[0], directive == "server" ? server_properties : location_properties))
+    throw ParseException(n, "`" + result[0] +"` is invalid property for " + directive + ".");
+  return (result);
+}
+
+/**
+ * @brief 読み込んだparameterが適切かチェックする
+ */
+bool  is_property_name(std::string property_name, const char** valid_name_list)
+{
+  for (size_t i = 0; valid_name_list[i]; i++)
+  {
+    if (property_name == valid_name_list[i])
+      return (true);
+  }
+  return (false);
 }
 
 /**
@@ -141,7 +173,81 @@ std::vector<std::string>  split(std::string content, std::string separator)
 bool  is_skip(std::string line)
 {
   return (
+    line.size() == 0 ||
     line[0] == '#' ||
     split(line, " ").size() == 0
   );
+}
+
+/**
+ * @brief std::stringをsize_tに変換
+ */
+// TODO: 負の数渡したときどうなるのか確認。
+size_t  convert_to_size_t(std::string item, size_t line_num)
+{
+  size_t              value;
+  std::istringstream  convert(item);
+
+  if (!(convert >> value))
+    throw ParseException(line_num, "`" + item + "` is not a positive integer");
+  return (value);
+}
+
+/**
+ * @brief methodに書かれている内容がHTTPメソッドかチェックする
+ */
+bool  is_method(std::string method)
+{
+  for (size_t i = 0; methods[i]; i++)
+  {
+    if (method == methods[i])
+      return (true);
+  }
+  return (false);
+}
+
+/**
+ * @brief autoindexの on/offをboolに変換する
+ */
+bool  autoindex_to_bool(std::string autoindex, size_t line_num)
+{
+  if (autoindex == "on")
+    return (true);
+  else if (autoindex == "off")
+    return (false);
+  else
+    throw ParseException(line_num, "autoindex parameter should be \"on\" or \"off\".");
+}
+
+/**
+ * @brief sed -i -e 's/to_replace/new_value/g' source
+ */
+std::string replace(std::string src, std::string to_replace, std::string new_value)
+{
+	size_t start = 0;
+	while((start = src.find(to_replace, start)) != std::string::npos)
+	{
+		src.replace(start, to_replace.length(), new_value);
+		start += new_value.length();
+	}
+	return (src);
+}
+
+/**
+ * @brief ファイルの存在を確認する
+ * @ref https://www.c-lang.net/stat/index.html
+ */
+bool check_path(std::string path)
+{
+	struct stat buffer;
+
+	int exist = stat(path.c_str(), &buffer);
+	if(exist != 0)
+    return (false);
+	//通常のファイルの場合
+	if(S_ISREG(buffer.st_mode))
+		return (true);
+	//ディレクトリの場合
+	else
+		return (false);
 }

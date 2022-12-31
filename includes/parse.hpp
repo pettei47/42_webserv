@@ -1,11 +1,15 @@
 #ifndef PARSE_HPP
 #define PARSE_HPP
 
+#include "ft_util.hpp"
 #include "webserv.hpp"
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #define BUFFER_SIZE 256
 extern const char* server_properties[];
-extern const char* route_properties[];
+extern const char* location_properties[];
 extern const char* methods[];
 
 enum  server_properties
@@ -16,10 +20,10 @@ enum  server_properties
   PROP_SERVER_ROOT,
 };
 
-enum  route_properties
+enum  location_properties
 {
   PROP_METHOD,
-  PROP_ROUTE_ROOT,
+  PROP_LOCATION_ROOT,
   PROP_AUTOINDEX,
   PROP_INDEX,
   PROP_CGI_PATH,
@@ -41,17 +45,16 @@ enum  http_methods
   HTTP_TRACE,
 };
 
-size_t                    count_lines(std::string src);
-size_t                    get_close_bracket_line(std::string src, size_t line);
-std::vector<std::string>  parse_property(std::string src, size_t line, std::string object);
-std::vector<std::string>  split(std::string src, std::string sep);
-bool                      is_property_name(std::string name, const char** valid_names);
 std::vector<std::string>  read_file(std::string file);
-bool                      is_skip(std::string src, size_t line);
-bool                      is_end_with_open_bracket(std::string src, size_t line);
-size_t                    convert_to_size_t(std::string param, size_t line);
-bool                      param_to_bool(std::string param, size_t line);
+std::vector<std::string>  split(std::string src, std::string sep);
+bool                      is_skip(std::string line);
+size_t                    get_close_bracket_line(std::vector<std::string> contents, size_t start);
+bool                      is_end_with_open_bracket(std::string line);
+std::vector<std::string>  parse_property(std::string src, size_t line, std::string object);
+bool                      is_property_name(std::string name, const char** valid_names);
 bool                      is_method(std::string method);
+size_t                    convert_to_size_t(std::string param, size_t line);
+bool                      autoindex_to_bool(std::string param, size_t line);
 std::string               replace(std::string src, std::string to_replace, std::string new_value);
 bool                      check_path(std::string path);
 

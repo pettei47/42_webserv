@@ -1,7 +1,8 @@
 #ifndef FT_SIGNAL_HPP
 #define FT_SIGNAL_HPP
 
-#include "webserv.hpp"
+#include <cstdlib>
+#include <signal.h>
 
 void set_signal();
 
