@@ -8,11 +8,11 @@ int main(int argc, char **argv)
   Config  config;
   char*   path = (char *)"conf/default.conf";
 
-	if (argc > 2)
-	{
-		std::cerr << "Usage: ./webserv <config file path>" << std::endl;
-		return (0);
-	}
+  if (argc > 2)
+  {
+    std::cerr << "Usage: ./webserv <config file path>" << std::endl;
+    return (0);
+  }
   else if (argc == 2)
     path = argv[1];
   try
@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     set_signal();
     config = Config(path);
 #if DEBUG_MODE == 1
-		config.show_servers();
+    config.show_servers();
 #endif
     Log("Start Server...");
 
@@ -28,8 +28,8 @@ int main(int argc, char **argv)
     // Cluster.loop();
   }
   catch(std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-	return (0);
+  {
+    std::cout << e.what() << std::endl;
+  }
+  return (0);
 }
