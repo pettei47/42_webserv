@@ -6,7 +6,7 @@
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 #include "HttpRequest.hpp"
-#include "server.hpp"
+#include "Server.hpp"
 #include "ft_util.hpp"
 #include "webserv.hpp"
 #include <vector>

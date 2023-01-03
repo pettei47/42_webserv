@@ -2,7 +2,7 @@
 #define CLUSTER_HPP
 
 #include "Config.hpp"
-#include "server.hpp"
+#include "Server.hpp"
 #include "Socket.hpp"
 #include "webserv.hpp"
 #include <list>

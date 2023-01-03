@@ -23,7 +23,7 @@
 
 #include "ft_util.hpp"
 #include "parse.hpp"
-#include "server.hpp"
+#include "Server.hpp"
 #include "ft_signal.hpp"
 #include "Config.hpp"
 #include "tester.hpp"
