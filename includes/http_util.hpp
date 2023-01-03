@@ -1,5 +1,5 @@
-#ifndef HTTP_HPP
-#define HTTP_HPP
+#ifndef HTTP_UTIL_HPP
+#define HTTP_UTIL_HPP
 
 #include "ft_util.hpp"
 
@@ -35,4 +35,4 @@ namespace http
 
 } // namespace http
 
-#endif /* HTTP_HPP */
+#endif /* HTTP_UTIL_HPP */

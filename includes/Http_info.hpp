@@ -3,7 +3,7 @@
 
 #include "Header.hpp"
 #include "Request.hpp"
-#include "HttpString.hpp"
+#include "Http_string.hpp"
 #include "Server.hpp"
 #include <map>
 #include <string>
@@ -16,10 +16,10 @@ struct HttpInfo
 	std::string script_name;
 	std::string query_string;
 	std::string protocol_version;
-	HttpHeader  headers;
-	HttpString  body;
+	Header      headers;
+	Http_string body;
 	Server*     server;
 	Location*   location;
 };
 
-#endif /* HTTPINFO_CPP */
+#endif /* HTTP_INFO_CPP */

@@ -1,7 +1,7 @@
 #ifndef CONNECTION_HPP
 #define CONNECTION_HPP
 
-#include "Http.hpp"
+#include "http_util.hpp"
 #include "Http_info.hpp"
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
