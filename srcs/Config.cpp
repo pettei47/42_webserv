@@ -79,28 +79,26 @@ void  Config::_parse_server_property(size_t n, Server& server)
 {
   std::vector<std::string>  line_items = parse_property(_file_contents[n], n, "server");
 
-  if (line_items[0] == server_properties[0]) // TODO: server_properties[]の各要素名をenumにしたい。
+  if (line_items[0] == server_properties[PROP_LISTEN])
   {
     if (line_items.size() != 3)
-      throw ParseException(n, std::string(server_properties[0]) + " <port> <host>;");
+      throw ParseException(n, std::string(server_properties[PROP_LISTEN]) + " <port> <host>;");
     server.port = convert_to_size_t(line_items[1], n);
-    // line_items[1]が数字ではないときのチェックがなさそう？ -> convert_to~でチェックしてた。
     server.host = line_items[2];
     // TODO: line_items[2]がhostに適さない値のときのチェックがなさそう？
   }
-  if (line_items[0] == server_properties[1])
+  if (line_items[0] == server_properties[PROP_SERVER_NAME])
   {
     for (size_t i = 1; i < line_items.size(); ++i)
       server.names.push_back(line_items[i]);
   }
-  if (line_items[0] == server_properties[2])
+  if (line_items[0] == server_properties[PROP_ERROR_PAGE])
   {
     if (line_items.size() != 3)
-      throw ParseException(n, std::string(server_properties[2]) + "<code> <file>;");
+      throw ParseException(n, std::string(server_properties[PROP_ERROR_PAGE]) + "<code> <file>;");
     server.error_pages[convert_to_size_t(line_items[1], n)] = line_items[2];
-    // line_items[1]が数値にできないとき死にそう -> convert_to~でチェックしてた。
   }
-  if (line_items[0] == server_properties[3])
+  if (line_items[0] == server_properties[PROP_SERVER_ROOT])
   {
     // TODO: line_items.size() < 2のとき死にそう
     server.root = line_items[1];
@@ -139,7 +137,7 @@ void  Config::_parse_location_property(size_t n, Location& location)
 {
   std::vector<std::string>  line_items = parse_property(_file_contents[n], n, "location");
 
-  if (line_items[0] == location_properties[0]) // lineがNULLのときセグフォしそう -> parse_property()でline.size() <= 1 だとエラーになっている
+  if (line_items[0] == location_properties[PROP_METHOD])
   {
     for (size_t i = 1; i < line_items.size(); ++i)
     {
@@ -149,28 +147,28 @@ void  Config::_parse_location_property(size_t n, Location& location)
         location.methods.push_back(line_items[i]);
     }
   }
-  if (line_items[0] == location_properties[1]) // TODO:location_properties[]の各要素名をenumにしたい。
+  if (line_items[0] == location_properties[PROP_LOCATION_ROOT])
     location.root = line_items[1];
-  if (line_items[0] == location_properties[2])
+  if (line_items[0] == location_properties[PROP_AUTOINDEX])
     location.autoindex = autoindex_to_bool(line_items[1], n);
-  if (line_items[0] == location_properties[3])
+  if (line_items[0] == location_properties[PROP_INDEX])
   {
     if (line_items.size() < 2)
-      throw ParseException(n, std::string(location_properties[3]) + "index is empty.");
+      throw ParseException(n, std::string(location_properties[PROP_INDEX]) + "index is empty.");
     location.index.erase(location.index.begin());
     for (size_t i = 1; i < line_items.size(); i++)
       location.index.push_back(line_items[i]);
   }
-  if (line_items[0] == location_properties[4])
+  if (line_items[0] == location_properties[PROP_CGI_PATH])
     location.cgi_path = line_items[1];
-  if (line_items[0] == location_properties[5])
+  if (line_items[0] == location_properties[PROP_UPLOAD_ENABLE])
     location.upload_enable = autoindex_to_bool(line_items[1], n);
-  if (line_items[0] == location_properties[6])
+  if (line_items[0] == location_properties[PROP_UPLOAD_PATH])
     location.upload_path = line_items[1];
-  if (line_items[0] == location_properties[7])
+  if (line_items[0] == location_properties[PROP_CLIENT_MAX_BODY_SIZE])
   {
     if (line_items.size() != 2)
-      throw ParseException(n, std::string(location_properties[7]) + " <size[K,M,G]>;");
+      throw ParseException(n, std::string(location_properties[PROP_CLIENT_MAX_BODY_SIZE]) + " <size[K,M,G]>;");
     location.client_max_body_size = convert_to_size_t(line_items[1], n);
     char  last = line_items[1][line_items[1].size() - 1];
     if(last == 'K' || last == 'k')
@@ -180,9 +178,9 @@ void  Config::_parse_location_property(size_t n, Location& location)
     else if(last == 'G' || last == 'G')
       location.client_max_body_size *= 1024 * 1024 * 1024;
     else if(!std::isdigit(last))
-      throw ParseException(n, std::string(location_properties[7]) + " <size[K,M,G]>;");
+      throw ParseException(n, std::string(location_properties[PROP_CLIENT_MAX_BODY_SIZE]) + " <size[K,M,G]>;");
   }
-  if (line_items[0] == location_properties[8])
+  if (line_items[0] == location_properties[PROP_RETURN])
   {
     if (line_items.size() != 3 || !_check_redirect_status(line_items[1]))
       throw ParseException(n, std::string(location_properties[8]) + " <status: 3xx> <URL>;");
@@ -282,6 +280,7 @@ void Config::_validate_config()
           _servers[i].host = "localhost";
         if(_servers[j].host == "127.0.0.1")
           _servers[j].host = "localhost";
+        // TODO: このコメントアウトが何なのか確認する↓
         //if(_servers[i].host == _servers[j].host && _servers[i].port == _servers[j].port)
         //throw ParseException(0, "Two servers have the same host and port.");
       }
@@ -291,7 +290,8 @@ void Config::_validate_config()
 
 /**
  * @brief server構造体の情報を出力する、デバッグ用
- * TODO:これはserver構造体をclass化してそこにメソッド持たせた方が綺麗な気がする…。
+ * TODO:これはserver構造体をclass化してそこにメソッド持たせた方が綺麗な気がする…？
+ *      -> debug用なので余力があれば対応する
  */
 void  Config::show_servers()
 {
