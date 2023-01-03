@@ -2,6 +2,11 @@
 #define SERVER_HPP
 
 #include "webserv.hpp"
+#include <arpa/inet.h>
+#include <cstring>
+#include <netdb.h>
+#include <stdexcept>
+#include <unistd.h>
 
 struct Location
 {
