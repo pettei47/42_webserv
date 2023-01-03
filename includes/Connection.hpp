@@ -16,16 +16,16 @@
 class Connection
 {
 private:
-  size_t _id;
+  size_t                _id;
   int                   _cfd;  //connection用のfd
   enum phase            _phase;
-  Http_info              _info;
-  Response*         _response;
+  Http_info             _info;
+  Response*             _response;
   std::vector<Server>&  _servers;
-  Request           _request;
+  Request               _request;
 
 
-  void    _make_Response(int status_code);
+  void    _make_response(int status_code);
   ssize_t _recv();
 
   static const size_t _max_buffer_size = 1024;
@@ -44,8 +44,8 @@ public:
   void  set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const;
   bool  check_and_handle(fd_set& read_set, fd_set& write_set);
 
-  int   get_sfd() const;
-  enum phase get_phase() const;
+  int             get_cfd() const;
+  enum phase      get_phase() const;
   const Response* get_response() const;
 };
 

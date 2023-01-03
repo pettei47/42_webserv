@@ -121,7 +121,7 @@ void  Socket::_close() const
  */
 void  Socket::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const
 {
-  utility::set_fd(_lfd, read_set, max_fd);
+  ft::set_fd(_lfd, read_set, max_fd);
 
   connection_citr it_end = _connections.end();
   for(connection_citr it = _connections.begin(); it != it_end; ++it)
@@ -137,7 +137,7 @@ void  Socket::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) co
  */
 void  Socket::check_and_handle(fd_set& read_set, fd_set& write_set)
 {
-  if(utility::isset_clr_fd(_lfd, read_set))
+  if(ft::clr_fd(_lfd, read_set))
     accept_connection();
   for(connection_itr it = _connections.begin(); it != _connections.end();)
   {

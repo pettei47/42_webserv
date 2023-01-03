@@ -59,5 +59,30 @@ namespace ft
     return filepath.substr(dot_index + 1);
   }
 
+  /**
+   * @brief fd_setにfdをセットしてmax_fdを更新する
+   * @param fd: ファイルディスクリプタ
+   * @param set:  selectで使用するファイルディスクリプタのセット
+   *              FD_ZERO済みの状態で渡される。
+   * @param max_fd: ファイルディスクリプタの最大値
+   */
+  void set_fd(int fd, fd_set& set, int& max_fd)
+  {
+    max_fd = std::max(max_fd, fd);
+    FD_SET(fd, &set);
+  }
+
+  /**
+   * @brief FD_ISSETでtrueだった場合FD_CLRを行う
+   * @param fd: ファイルディスクリプタ
+   * @param set: selectで使用するファイルディスクリプタのセット
+   */
+  bool clr_fd(int fd, fd_set& set)
+  {
+    if(!FD_ISSET(fd, &set)) // fdがsetに含まれていない場合0が返る
+      return false;
+    FD_CLR(fd, &set); // fdをsetから削除する
+    return true;
+  }
 
 }
