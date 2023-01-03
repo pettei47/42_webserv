@@ -30,8 +30,8 @@ void  Socket::add_server(const Server& server)
 /**
  * @brief selectを通して呼ばれる
  * - connectionsに新しいfdのエントリを追加する
+ * TODO: 説明がふわっとしてるのでもう少し説明する。
  */
-// TODO: 説明がふわっとしてるのでもう少し説明する。
 int Socket::accept_connection()
 {
   int fd;

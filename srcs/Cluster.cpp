@@ -87,7 +87,10 @@ void  Cluster::_set_select_fds()
 
 /**
  * @brief メインループ。
- *        select -> TODO: ここに処理の流れを書いておきたい。
+ *        Socketは開いた状態（＝listenは開始済み）
+ *        -> selectでfdが読み書き可能かどうかチェック
+ *        -> 
+ *        TODO: ここに処理の流れを書いておきたい。
  */
 void Cluster::main_loop()
 {
