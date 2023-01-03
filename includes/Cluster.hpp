@@ -21,8 +21,8 @@ private:
 	fd_set            _write_set;
 
 	void        _set_max_fd();
-	socket_itr  _check_virtual(Server s);
-	void        _set_select_fd();
+	socket_itr  _get_server_socket(Server s);
+	void        _set_select_fds();
 	void        _register_socket(Server s);
 
 	static const useconds_t _usleep_time = 500;
@@ -30,7 +30,7 @@ private:
 public:
 	Cluster(Config config);
 	~Cluster();
-	void loop();
+	void main_loop();
 };
 
 #endif

@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     Log("Start Server...");
 
     // Cluster Cluster(config);
-    // Cluster.loop();
+    // Cluster.main_loop();
   }
   catch(std::exception& e)
   {

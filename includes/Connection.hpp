@@ -1,12 +1,17 @@
 #ifndef CONNECTION_HPP
 #define CONNECTION_HPP
 
-#include "HttpInfo.hpp"
+#include "Http.hpp"
+#include "Http_info.hpp"
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
+#include "HttpRequest.hpp"
 #include "server.hpp"
 #include "ft_util.hpp"
+#include "webserv.hpp"
 #include <vector>
+#include <sys/socket.h>
+#include <unistd.h>
 
 class Connection
 {
@@ -14,13 +19,13 @@ private:
   size_t _id;
   int                   _cfd;  //connection用のfd
   enum phase            _phase;
-  HttpInfo              _info;
-  HttpResponse*         _response;
+  Http_info              _info;
+  Response*         _response;
   std::vector<Server>&  _servers;
-  HttpRequest           _request;
+  Request           _request;
 
 
-  void    _make_HttpResponse(int status_code);
+  void    _make_Response(int status_code);
   ssize_t _recv();
 
   static const size_t _max_buffer_size = 1024;
@@ -41,7 +46,7 @@ public:
 
   int   get_sfd() const;
   enum phase get_phase() const;
-  const HttpResponse* get_response() const;
+  const Response* get_response() const;
 };
 
 #endif

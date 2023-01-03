@@ -1,12 +1,21 @@
 #include "Cluster.hpp"
 
+
+/**
+ * @brief Configで渡されたサーバーが新規か既存か
+ *        (Socketでlisten_fdを開放済みかどうか)をチェックして、
+ *        未開放の場合は開けてから(新しいSocketを作ってから)_socketsに追加する。
+ * @param config: configクラス
+ * TODO: この関数の説明を山下くんに共有する
+ */
 Cluster::Cluster(Config config): _max_fd(0)
 {
   std::vector<Server>&  servers = config._servers;
 
   for(size_t i = 0; i < servers.size(); i++)
   {
-    socket_itr it = _check_virtual(servers[i]);
+    socket_itr it = _get_server_socket(servers[i]);
+
     if(it != _sockets.end())
       it->add_server(servers[i]);
     else
@@ -22,18 +31,21 @@ Cluster::Cluster(Config config): _max_fd(0)
 Cluster::~Cluster(){}
 
 /**
- * @brief TODO: この関数の説明を書く。
- *  いつ使われているか。何が目的か。（場合によっては関数名を変える）
+ * @brief 引数で渡されたサーバーが新規か既存か
+ *        (Socketでlisten_fdを開放済みかどうか)をチェックして、
+ * @param server: server
+ * @return socket_itr:  開放済みのSocketを見つけたらそのイテレータを返す。
+ *                      見つからなければend()のイテレータを返す。
+ * TODO: この関数の説明を山下くんに共有する
  */
-Cluster::socket_itr Cluster::_check_virtual(Server s)
+Cluster::socket_itr Cluster::_get_server_socket(Server server)
 {
-  socket_itr s_it_end = _sockets.end();
-  for(socket_itr s_it = _sockets.begin(); s_it != s_it_end; ++s_it)
+  for(socket_itr s_it = _sockets.begin(); s_it != _sockets.end(); ++s_it)
   {
-    if((s_it->get_port() == s.port) && (s_it->get_host() == s.host))
+    if((s_it->get_port() == server.port) && (s_it->get_host() == server.host))
       return s_it;
   }
-  return s_it_end;
+  return _sockets.end();
 }
 
 /**
@@ -50,7 +62,7 @@ void  Cluster::_set_max_fd()
       c_it != s_it->get_connections().end(); ++c_it)
     {
       enum phase phase = c_it->get_phase();
-      const HttpResponse* response = c_it->get_response();
+      const Response* response = c_it->get_response();
 
       if(response == NULL || phase == SEND)
         fd = c_it->get_sfd();
@@ -62,9 +74,9 @@ void  Cluster::_set_max_fd()
 }
 
 /**
- * @brief TODO: この関数の説明を書く。
+ * @brief 全てのsocketに、selectするためのfdをセットする
  */
-void  Cluster::_set_select_fd()
+void  Cluster::_set_select_fds()
 {
   _max_fd = 2;
   FD_ZERO(&_write_set);
@@ -74,9 +86,10 @@ void  Cluster::_set_select_fd()
 }
 
 /**
- * @brief TODO: この関数の説明を書く。
+ * @brief メインループ。
+ *        select -> TODO: ここに処理の流れを書いておきたい。
  */
-void Cluster::loop()
+void Cluster::main_loop()
 {
   int ret = 0;
   while(1)
@@ -85,7 +98,7 @@ void Cluster::loop()
 
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;
-    _set_select_fd();
+    _set_select_fds();
     Log(ft::to_string(_max_fd));
     ret = select(_max_fd + 1, &_read_set, &_write_set, NULL, &timeout);
     if(ret < 0)

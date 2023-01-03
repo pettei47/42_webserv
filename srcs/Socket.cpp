@@ -138,11 +138,8 @@ void  Socket::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) co
 void  Socket::check_and_handle(fd_set& read_set, fd_set& write_set)
 {
   if(utility::isset_clr_fd(_lfd, read_set))
-  {
     accept_connection();
-  }
-  connection_itr it_end = _connections.end();
-  for(connection_itr it = _connections.begin(); it != it_end;)
+  for(connection_itr it = _connections.begin(); it != _connections.end();)
   {
     if(it->check_and_handle(read_set, write_set))
     {
