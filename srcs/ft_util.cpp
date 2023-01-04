@@ -2,6 +2,10 @@
 
 namespace ft
 {
+  /**
+   * @brief 文字列が全て大文字ならtrue, そうでなければfalseを返す
+   * @param str: 文字列
+   */
   bool is_upper(std::string str)
   {
     size_t len = str.length();
@@ -13,6 +17,10 @@ namespace ft
     return true;
   }
 
+  /**
+   * @brief 文字列をTitleCaseに変換する
+   * @param str: 文字列
+   */
   std::string to_titlecase(std::string const& str)
   {
     std::string ret;
@@ -34,11 +42,19 @@ namespace ft
     return ret;
   }
 
+  /**
+   * @brief スペースとタブ文字を判定する
+   * @param c: 文字
+   */
   bool  is_space(char c)
   {
     return (c == ' ' || c == '\t');
   }
 
+  /**
+   * @brief 文字列の前後の空白スペースをトリムする
+   * @param str: 文字列
+   */
   std::string trim_space(const std::string& str)
   {
     size_t  first = str.find_first_not_of(" \t");
@@ -50,6 +66,10 @@ namespace ft
     return str.substr(first, last - first + 1);
   }
 
+  /**
+   * @brief ファイルの拡張子を取る
+   * @param filepath: ファイルパス
+   */
   std::string get_file_ext(const std::string& filepath)
   {
     size_t  dot_index = filepath.find_last_of(".");
