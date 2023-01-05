@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-struct HttpInfo
+struct Http_info
 {
 	std::string method;
 	std::string uri;

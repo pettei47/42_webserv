@@ -3,9 +3,8 @@
 
 #include "http_util.hpp"
 #include "Http_info.hpp"
-#include "HttpRequest.hpp"
-#include "HttpResponse.hpp"
-#include "HttpRequest.hpp"
+#include "Request.hpp"
+#include "Response.hpp"
 #include "Server.hpp"
 #include "ft_util.hpp"
 #include "webserv.hpp"
