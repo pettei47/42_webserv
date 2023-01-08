@@ -2,7 +2,6 @@
 #define HTTP_INFO_HPP
 
 #include "Header.hpp"
-#include "Request.hpp"
 #include "HttpString.hpp"
 #include "Server.hpp"
 #include <map>
