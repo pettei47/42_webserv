@@ -2,6 +2,7 @@
 #define HEADER_HPP
 
 #include "ft_util.hpp"
+#include <iostream>
 #include <map>
 #include <string>
 
@@ -38,9 +39,9 @@ class Header
     std::string&  operator[](std::string key);
     const std::string&  at(const std::string& key) const;
 
-    void  set_content_type(const std::string& file);
-    void  set_content_length(size_t length);
-    ssize_t get_content_length();
+    void              set_content_type(const std::string& file);
+    void              set_content_length(size_t length);
+    ssize_t           get_content_length();
     const std::string to_string() const;
 
     void  show_headers() const;
