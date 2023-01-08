@@ -3,13 +3,13 @@
 
 #include "Header.hpp"
 #include "Request.hpp"
-#include "Http_string.hpp"
+#include "HttpString.hpp"
 #include "Server.hpp"
 #include <map>
 #include <string>
 #include <vector>
 
-struct Http_info
+struct HttpInfo
 {
 	std::string method;
 	std::string uri;
@@ -17,7 +17,7 @@ struct Http_info
 	std::string query_string;
 	std::string protocol_version;
 	Header      headers;
-	Http_string body;
+	HttpString	body;
 	Server*     server;
 	Location*   location;
 };

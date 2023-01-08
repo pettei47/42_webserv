@@ -2,7 +2,7 @@
 #define CONNECTION_HPP
 
 #include "http_util.hpp"
-#include "Http_info.hpp"
+#include "HttpInfo.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
 #include "Server.hpp"
@@ -18,7 +18,7 @@ private:
   size_t                _id;
   int                   _cfd;  //connection用のfd
   enum phase            _phase;
-  Http_info             _info;
+  HttpInfo             _info;
   Response*             _response;
   std::vector<Server>&  _servers;
   Request               _request;
