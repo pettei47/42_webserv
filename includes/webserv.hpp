@@ -39,7 +39,7 @@ class Log
 public:
   Log(std::string msg, size_t id = 0)
   {
-#if DEBUG_MODE == 1
+// #if DEBUG_MODE == 1
     struct timeval current_time;
     char time_buffer[100];
     bzero(time_buffer, 100);
@@ -49,10 +49,10 @@ public:
       std::cout << "[" << time_buffer << "] : [" << id << "] " << msg << std::endl;
     else
       std::cout << "[" << time_buffer << "] : " << msg << std::endl;
-#else
-    (void)msg;
-    (void)id;
-#endif
+// #else
+//     (void)msg;
+//     (void)id;
+// #endif
   }
 };
 
