@@ -50,6 +50,6 @@ class Header
     void  append(std::pair<std::string, std::string> key_value);
 
     std::string content_type_to_ext() const;
-}
+};
 
 #endif

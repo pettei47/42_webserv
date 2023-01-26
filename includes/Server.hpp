@@ -1,7 +1,6 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "webserv.hpp"
 #include <vector>
 #include <string>
 #include <arpa/inet.h>

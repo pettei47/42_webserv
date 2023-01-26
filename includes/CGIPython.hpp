@@ -3,15 +3,15 @@
 
 #include "EnvVar.hpp"
 #include "FileData.hpp"
-#include "Http.hpp"
-#include "HttpBody.hpp"
-#include "HttpHeader.hpp"
+#include "http_util.hpp"
+#include "Body.hpp"
+#include "Header.hpp"
 #include "HttpInfo.hpp"
-#include "HttpStatus.hpp"
+#include "Status.hpp"
 #include "HttpString.hpp"
 #include "TimeManage.hpp"
-#include "Utility.hpp"
-#include "WebServ.hpp"
+#include "ft_util.hpp"
+#include "webserv.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -33,9 +33,9 @@ private:
 	int _read_fd;
 	pid_t _ch_pid;
 	HttpString _data;
-	HttpStatus& _httpstatus;
-	HttpHeader& _httpheader;
-	HttpBody& _body;
+	Status& _httpstatus;
+	Header& _httpheader;
+	Body& _body;
 	HttpInfo& _info;
 	std::string& _filepath;
 	TimeManage _time;
@@ -58,9 +58,9 @@ private:
 
 public:
 	CGIPython(HttpInfo& info,
-			  HttpStatus& httpstatus,
-			  HttpHeader& httpheader,
-			  HttpBody& body,
+			  Status& httpstatus,
+			  Header& httpheader,
+			  Body& body,
 			  std::string& filepath);
 	~CGIPython();
 

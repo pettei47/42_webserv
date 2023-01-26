@@ -2,7 +2,9 @@
 #define BODY_HPP
 
 #include "http_util.hpp"
+#include "Status.hpp"
 #include "HttpString.hpp"
+#include "Autoindex.hpp"
 #include "webserv.hpp"
 #include <cerrno>
 #include <fcntl.h>

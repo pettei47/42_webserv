@@ -1,5 +1,4 @@
 #include "Autoindex.hpp"
-#include "Http.hpp"
 
 Autoindex::Autoindex() { }
 
@@ -17,8 +16,8 @@ std::string Autoindex::_generate_html_body(std::string script_name,
 {
 	std::string content;
 	content = "<h1>Index of " + script_name;
-	content += "</h1><hr>" + utility::CRLF;
-	content += "<pre><a href=\"../\">../</a>" + utility::CRLF;
+	content += "</h1><hr>" + ft::CRLF;
+	content += "<pre><a href=\"../\">../</a>" + ft::CRLF;
 
 	size_t size = entries.size();
 	for(size_t i = 0; i < size; i++)
@@ -27,7 +26,7 @@ std::string Autoindex::_generate_html_body(std::string script_name,
 		content += entries[i];
 		content += "\">";
 		content += entries[i];
-		content += "</a>" + utility::CRLF;
+		content += "</a>" + ft::CRLF;
 	}
 	content += "</pre><hr>";
 	return content;

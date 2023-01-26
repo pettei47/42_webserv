@@ -65,7 +65,7 @@ void  Cluster::_set_max_fd()
       const Response* response = c_it->get_response();
 
       if(response == NULL || phase == SEND)
-        fd = c_it->get_sfd();
+        fd = c_it->get_cfd();
       else
         fd = response->get_fd();
       _max_fd = _max_fd > fd ? _max_fd : fd;

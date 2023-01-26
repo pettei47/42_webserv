@@ -113,7 +113,7 @@ bool Body::set_error_default_body(int status_code)
   try
   {
     std::string status_str =
-      ft::to_string(status_code) + ' ' + HttpStatus::status_code_to_string(status_code);
+      ft::to_string(status_code) + ' ' + Status::status_code_to_string(status_code);
     std::string content = "<center><h1>" + status_str + "</h1></center>" + ft::CRLF;
     content += "<hr><center>webserv</center>" + ft::CRLF;
 

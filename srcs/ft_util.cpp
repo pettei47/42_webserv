@@ -97,7 +97,7 @@ namespace ft
    * @param fd: ファイルディスクリプタ
    * @param set: selectで使用するファイルディスクリプタのセット
    */
-  bool clr_fd(int fd, fd_set& set)
+  bool clear_fd(int fd, fd_set& set)
   {
     if(!FD_ISSET(fd, &set)) // fdがsetに含まれていない場合0が返る
       return false;

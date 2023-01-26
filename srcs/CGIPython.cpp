@@ -1,10 +1,10 @@
 #include "CGIPython.hpp"
 
 CGIPython::CGIPython(HttpInfo& info,
-					 HttpStatus& httpstatus,
-					 HttpHeader& httpheader,
-					 HttpBody& body,
-					 std::string& filepath)
+					Status& httpstatus,
+					Header& httpheader,
+					Body& body,
+					std::string& filepath)
 	: _write_fd(-1)
 	, _read_fd(-1)
 	, _httpstatus(httpstatus)
@@ -62,7 +62,7 @@ void CGIPython::_set_env(EnvVar& env)
 		env["SCRIPT_FILENAME"] = _filepath;
 		env["SCRIPT_NAME"] = _info.script_name;
 		env["SERVER_NAME"] = _info.server->name;
-		env["SERVER_PORT"] = utility::to_string(_info.server->port);
+		env["SERVER_PORT"] = ft::to_string(_info.server->port);
 		env["SERVER_PROTOCOL"] = _info.protocol_version;
 		env["SERVER_SOFTWARE"] = "webserv/1.0";
 		env.set_c_env();
@@ -339,11 +339,11 @@ void CGIPython::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) 
 {
 	if(_write_fd != -1)
 	{
-		utility::set_fd(_write_fd, write_set, max_fd);
+		ft::set_fd(_write_fd, write_set, max_fd);
 	}
 	if(_read_fd != -1)
 	{
-		utility::set_fd(_read_fd, read_set, max_fd);
+		ft::set_fd(_read_fd, read_set, max_fd);
 	}
 }
 
@@ -359,12 +359,12 @@ enum phase CGIPython::check_and_handle(fd_set& read_set, fd_set& write_set)
 	// 時間制限チェック
 	try
 	{
-		if(_write_fd != -1 && utility::isset_clr_fd(_write_fd, write_set))
+		if(_write_fd != -1 && ft::isset_clear_fd(_write_fd, write_set))
 		{
 			Log("cgi write");
 			_write();
 		}
-		if(_read_fd != -1 && utility::isset_clr_fd(_read_fd, read_set))
+		if(_read_fd != -1 && ft::isset_clear_fd(_read_fd, read_set))
 		{
 			Log("cgi read");
 			_read();

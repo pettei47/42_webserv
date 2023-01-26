@@ -3,7 +3,7 @@
 size_t Connection::_total_connections = 0;
 
 Connection::Connection(int fd, std::vector< Server >& servers)
-  : _sfd(fd)
+  : _cfd(fd)
   , _phase(RECV)
   , _response(NULL)
   , _servers(servers)
@@ -32,7 +32,7 @@ Connection& Connection::operator=(Connection const& other)
 {
   if(this != &other)
   {
-    _sfd = other._sfd;
+    _cfd = other._cfd;
     _phase = other._phase;
     _info = other._info;
     _response = other._response;
@@ -92,7 +92,7 @@ void Connection::_make_response(int status_code)
   }
   try
   {
-    _response = new Response(_info, _sfd, status_code);
+    _response = new Response(_info, _cfd, status_code);
     _phase = _response->handle_response();
   }
   catch(const std::exception& e)
@@ -156,7 +156,7 @@ bool Connection::check_and_handle(fd_set& read_set, fd_set& write_set)
 {
   if(_phase == RECV)
   {
-    if(ft::clr_fd(_cfd, read_set))
+    if(ft::clear_fd(_cfd, read_set))
     {
       Log("Requset Recieved", _id);
       recv_request();
@@ -169,7 +169,7 @@ bool Connection::check_and_handle(fd_set& read_set, fd_set& write_set)
   }
   else if(_phase == SEND)
   {
-    if(ft::clr_fd(_cfd, write_set))
+    if(ft::clear_fd(_cfd, write_set))
     {
       Log("Response Send", _id);
       _phase = _response->handle_response();

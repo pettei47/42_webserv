@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 
+#include "http_util.hpp"
+#include "ft_util.hpp"
+
 class Autoindex
 {
 public:

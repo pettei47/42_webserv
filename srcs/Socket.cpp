@@ -137,7 +137,7 @@ void  Socket::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) co
  */
 void  Socket::check_and_handle(fd_set& read_set, fd_set& write_set)
 {
-  if(ft::clr_fd(_lfd, read_set))
+  if(ft::clear_fd(_lfd, read_set))
     accept_connection();
   for(connection_itr it = _connections.begin(); it != _connections.end();)
   {

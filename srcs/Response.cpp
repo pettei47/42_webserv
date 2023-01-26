@@ -767,14 +767,14 @@ enum phase Response::check_and_handle(fd_set& read_set, fd_set& write_set)
   switch(_phase)
   {
   case WRITE:
-    if(ft::isset_clr_fd(_fd, write_set))
+    if(ft::isset_clear_fd(_fd, write_set))
     {
       Log("write");
       return handle_response();
     }
     break;
   case READ:
-    if(ft::isset_clr_fd(_fd, read_set))
+    if(ft::isset_clear_fd(_fd, read_set))
     {
       Log("read");
       return handle_response();

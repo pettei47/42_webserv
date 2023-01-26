@@ -70,6 +70,6 @@ namespace http
    */
   std::string generate_uri_head(const Server& s)
   {
-    return "http://" + s.host + ":" + utility::to_string(s.port);
+    return "http://" + s.host + ":" + ft::to_string(s.port);
   }
 } // namespace http
