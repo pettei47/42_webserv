@@ -2,7 +2,7 @@
 #define REQUEST_HPP
 
 #include "Header.hpp"
-#include "HttpMessage.hpp"
+#include "Message.hpp"
 #include "HttpString.hpp"
 #include "Server.hpp"
 #include <sstream>
@@ -12,7 +12,7 @@
 
 struct HttpInfo;
 
-class Request : public HttpMessage
+class Request : public Message
 {
 private:
   std::vector< Server >& _servers;

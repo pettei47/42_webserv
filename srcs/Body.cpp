@@ -113,9 +113,9 @@ bool Body::set_error_default_body(int status_code)
 	try
 	{
 		std::string status_str =
-			utility::to_string(status_code) + ' ' + HttpStatus::status_code_to_string(status_code);
-		std::string content = "<center><h1>" + status_str + "</h1></center>" + utility::CRLF;
-		content += "<hr><center>webserv</center>" + utility::CRLF;
+			ft::to_string(status_code) + ' ' + HttpStatus::status_code_to_string(status_code);
+		std::string content = "<center><h1>" + status_str + "</h1></center>" + ft::CRLF;
+		content += "<hr><center>webserv</center>" + ft::CRLF;
 
 		std::string html = _generate_html(status_str, content);
 		set_body(html);
@@ -168,11 +168,11 @@ void Body::set_body_size(size_t file_size)
 
 std::string Body::_generate_html(std::string title, std::string body)
 {
-	std::string header = "<html>" + utility::CRLF;
-	std::string tail = "</body>" + utility::CRLF + "</html>" + utility::CRLF;
+	std::string header = "<html>" + ft::CRLF;
+	std::string tail = "</body>" + ft::CRLF + "</html>" + ft::CRLF;
 
-	title = "<head><title>" + title + "</title></head>" + utility::CRLF;
-	body = "<body>" + utility::CRLF + body;
+	title = "<head><title>" + title + "</title></head>" + ft::CRLF;
+	body = "<body>" + ft::CRLF + body;
 
 	std::string html = header + title + body + tail;
 	return html;

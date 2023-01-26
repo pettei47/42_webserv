@@ -1,7 +1,7 @@
 #include "Request.hpp"
 
 Request::Request(std::vector< Server >& servers)
-  : HttpMessage(ft::CRLF)
+  : Message(ft::CRLF)
   , _servers(servers)
   , _content_length(0)
   , _body_type(NONE)
@@ -10,7 +10,7 @@ Request::Request(std::vector< Server >& servers)
 Request::~Request() { }
 
 Request::Request(Request const& other)
-  : HttpMessage(other)
+  : Message(other)
   , _servers(other._servers)
 {
   *this = other;

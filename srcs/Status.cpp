@@ -85,7 +85,7 @@ bool Status::is_redirect() const
  */
 const std::string Status::to_string() const
 {
-  std::string status_line = _protocol_version + " " + utility::to_string(_status_code) + " " +
-                status_code_to_string(_status_code) + " " + utility::CRLF;
+  std::string status_line = _protocol_version + " " + ft::to_string(_status_code) + " " +
+                status_code_to_string(_status_code) + " " + ft::CRLF;
   return status_line;
 }

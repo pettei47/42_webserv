@@ -1,9 +1,9 @@
 #ifndef BODY_HPP
 #define BODY_HPP
 
-#include "Http.hpp"
+#include "http_util.hpp"
 #include "HttpString.hpp"
-#include "WebServ.hpp"
+#include "webserv.hpp"
 #include <cerrno>
 #include <fcntl.h>
 #include <string>
