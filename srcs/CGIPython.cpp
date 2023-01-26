@@ -1,4 +1,4 @@
-#include "CGIPython.hpp"
+#include "webserv.hpp"
 
 CGIPython::CGIPython(HttpInfo& info,
 					Status& httpstatus,
@@ -359,12 +359,12 @@ enum phase CGIPython::check_and_handle(fd_set& read_set, fd_set& write_set)
 	// 時間制限チェック
 	try
 	{
-		if(_write_fd != -1 && ft::isset_clear_fd(_write_fd, write_set))
+		if(_write_fd != -1 && ft::clear_fd(_write_fd, write_set))
 		{
 			Log("cgi write");
 			_write();
 		}
-		if(_read_fd != -1 && ft::isset_clear_fd(_read_fd, read_set))
+		if(_read_fd != -1 && ft::clear_fd(_read_fd, read_set))
 		{
 			Log("cgi read");
 			_read();

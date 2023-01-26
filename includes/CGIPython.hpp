@@ -1,20 +1,19 @@
 #ifndef CGIPYTHON_HPP
 #define CGIPYTHON_HPP
 
-#include "EnvVar.hpp"
-#include "FileData.hpp"
+#include <cstdlib>
+#include <cstring>
+#include <string>
 #include "http_util.hpp"
 #include "Body.hpp"
 #include "Header.hpp"
 #include "HttpInfo.hpp"
 #include "Status.hpp"
+#include "EnvVar.hpp"
+#include "FileData.hpp"
 #include "HttpString.hpp"
 #include "TimeManage.hpp"
 #include "ft_util.hpp"
-#include "webserv.hpp"
-#include <cstdlib>
-#include <cstring>
-#include <string>
 
 class CGIPython
 {

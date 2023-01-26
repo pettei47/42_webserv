@@ -1,4 +1,4 @@
-#include "Config.hpp"
+#include "webserv.hpp"
 
 Config::Config() {}
 

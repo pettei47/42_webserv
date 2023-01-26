@@ -2,14 +2,14 @@
 
 Header::ContentType::ContentType()
 {
-  types["txt"] = "text/plain";
-  types["csv"] = "text/csv";
-  types["html"] = "text/html";
-  types["css"] = "text/css";
-  types["jpg"] = "image/jpeg";
-  types["png"] = "image/png";
-  types["gif"] = "image/gif";
-  types["error"] = "";
+  _types["txt"] = "text/plain";
+  _types["csv"] = "text/csv";
+  _types["html"] = "text/html";
+  _types["css"] = "text/css";
+  _types["jpg"] = "image/jpeg";
+  _types["png"] = "image/png";
+  _types["gif"] = "image/gif";
+  _types["error"] = "";
 }
 
 struct Header::ContentType Header::_content_type;
@@ -22,9 +22,9 @@ struct Header::ContentType Header::_content_type;
  */
 const std::string&  Header::_ext_to_content_type(const std::string& ext) const
 {
-  if(_content_type.types.find(ext) == _content_type.types.end())
-    return _content_type.types["error"];
-  return _content_type.types[ext];
+  if(_content_type._types.find(ext) == _content_type._types.end())
+    return _content_type._types["error"];
+  return _content_type._types[ext];
 }
 
 /**
@@ -35,8 +35,8 @@ std::string Header::content_type_to_ext() const
 {
   if(!contains("Content-Type") || _headers.at("Content-Type").empty())
     return "txt";
-  for(std::map<std::string, std::string>::iterator it = _content_type.types.begin();
-      it != _content_type.types.end(); ++it)
+  for(headerItr it = _content_type._types.begin();
+      it != _content_type._types.end(); ++it)
   {
     if(_headers.at("Content-Type").compare(it->second) == 0)
       return it->first;
@@ -107,6 +107,16 @@ void Header::set_content_length(size_t length)
 }
 
 /**
+ * @brief contentのサイズからcontent-lengthを設定する
+ * @param length: contentのサイズ
+ */
+ssize_t Header::get_content_length()
+{
+  std::string str_value = _headers["Content-Length"];
+  return ft::unsigned_decimal_str_to_ssize_t(str_value);
+}
+
+/**
  * @brief ヘッダーをstringとして返す
  * @return ヘッダーのstring。終端はCRLFCRLF
  */
@@ -114,7 +124,7 @@ const std::string Header::to_string() const
 {
   std::string header_str;
 
-  for(std::map<std::string, std::string>::iterator it; = _headers.begin();
+  for(headerItrConst it = _headers.begin();
       it != _headers.end(); ++it)
   {
     header_str += it->first + ": " + it->second;
@@ -129,7 +139,7 @@ const std::string Header::to_string() const
  */
 void  Header::show_headers() const
 {
-  for(std::map<std::string, std::string>::iterator it = _headers.begin();
+  for(headerItrConst it = _headers.begin();
       it != _headers.end(); ++it)
     std::cout << "  - " << it->first << ": " << it->second << std::endl;
 }

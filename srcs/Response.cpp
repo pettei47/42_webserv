@@ -1,6 +1,4 @@
-#include "Response.hpp"
-#include <dirent.h>
-#include <sstream>
+#include "webserv.hpp"
 
 /**
  * @brief cgiでレスポンスを作成するかどうかを判断する
@@ -491,12 +489,12 @@ void Response::_parse_message()
 
 void Response::_retrieve_header()
 {
-  HttpMessage::_retrieve_header();
+  Message::_retrieve_header();
 }
 
 void Response::_retrieve_body()
 {
-  HttpMessage::_retrieve_body();
+  Message::_retrieve_body();
 }
 
 /**
@@ -686,7 +684,7 @@ void Response::_first_preparation()
 }
 
 Response::Response(HttpInfo& info, int connection_fd, int status_code)
-  : HttpMessage("\n")
+  : Message("\n")
   , _fd(0)
   , _connection_fd(connection_fd)
   , _phase(RECV)
@@ -767,14 +765,14 @@ enum phase Response::check_and_handle(fd_set& read_set, fd_set& write_set)
   switch(_phase)
   {
   case WRITE:
-    if(ft::isset_clear_fd(_fd, write_set))
+    if(ft::clear_fd(_fd, write_set))
     {
       Log("write");
       return handle_response();
     }
     break;
   case READ:
-    if(ft::isset_clear_fd(_fd, read_set))
+    if(ft::clear_fd(_fd, read_set))
     {
       Log("read");
       return handle_response();

@@ -1,4 +1,4 @@
-#include "Socket.hpp"
+#include "webserv.hpp"
 
 Socket::Socket(Server server)
   : _host(server.host)
@@ -9,6 +9,11 @@ Socket::~Socket(){}
 const std::string&  Socket::get_host() const
 {
   return _host;
+}
+
+size_t Socket::get_port() const
+{
+  return _port;
 }
 
 //TODO: lfdのlは何か確認する -> listen-fdっぽい？

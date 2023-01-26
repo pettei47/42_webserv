@@ -102,8 +102,8 @@ std::pair< std::string, std::string > Message::_parse_headerfield(std::string li
 	index = line.find(":");
 	value_len = (line.length() <= index + 1) ? 0 : line.length() - (index + 1);
 
-	key = utility::to_titlecase(line.substr(0, index));
-	value = utility::trim_ows(line.substr(index + 1, value_len));
+	key = ft::to_titlecase(line.substr(0, index));
+	value = ft::trim_space(line.substr(index + 1, value_len));
 	return std::make_pair(key, value);
 }
 

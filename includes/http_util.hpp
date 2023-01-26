@@ -2,6 +2,7 @@
 #define HTTP_UTIL_HPP
 
 #include "ft_util.hpp"
+#include "Server.hpp"
 #include <cctype>
 #include <ctime>
 #include <string>

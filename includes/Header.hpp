@@ -13,19 +13,23 @@
 
 class Header
 {
+  typedef std::map<std::string, std::string> header;
+  typedef std::map<std::string, std::string>::iterator headerItr;
+  typedef std::map<std::string, std::string>::const_iterator headerItrConst;
+
   private:
     /**
      * @brief コンテントのタイプとヘッダーでのコンテントタイプを対応付けるための構造体
      */
     struct ContentType
     {
-      std::map<std::string, std::string>  _types;
+      header  _types;
       ContentType();
     };
 
     static struct ContentType _content_type;
 
-    std::map<std::string, std::string>  _headers;
+    header  _headers;
 
     const std::string&  _ext_to_content_type(const std::string& ext) const;
     void                _set_default_header();

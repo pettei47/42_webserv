@@ -2,11 +2,12 @@
 #define CONNECTION_HPP
 
 #include "http_util.hpp"
+#include "ft_util.hpp"
 #include "HttpInfo.hpp"
+#include "CGIPython.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
 #include "Server.hpp"
-#include "ft_util.hpp"
 #include "webserv.hpp"
 #include <vector>
 #include <sys/socket.h>

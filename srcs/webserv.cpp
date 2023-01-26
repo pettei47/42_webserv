@@ -24,8 +24,8 @@ int main(int argc, char **argv)
 #endif
     Log("Start Server...");
 
-    // Cluster Cluster(config); // Socketをopen(listen)する。
-    // Cluster.main_loop();
+    Cluster Cluster(config); // Socketをopen(listen)する。
+    Cluster.main_loop();
   }
   catch(std::exception& e)
   {

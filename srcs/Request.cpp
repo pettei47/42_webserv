@@ -1,4 +1,4 @@
-#include "Request.hpp"
+#include "webserv.hpp"
 
 Request::Request(std::vector< Server >& servers)
   : Message(ft::CRLF)
@@ -105,7 +105,7 @@ void Request::_validate_startline()
     throw http::StatusException(400);
   if(_method != "GET" && _method != "POST" && _method != "DELETE")
     throw http::StatusException(405);
-  if(ft::trim_ows(_protocol_version).compare("HTTP/1.1"))
+  if(ft::trim_space(_protocol_version).compare("HTTP/1.1"))
     throw http::StatusException(505);
 }
 
@@ -306,7 +306,7 @@ void Request::_parse_body()
     {
       if(_raw_data.buf.find(_delim, _raw_data.index) == HttpString::npos)
         throw ReRecvException();
-      _content_length = ft::xstr_to_ssize_t(_get_next_line());
+      _content_length = ft::hex_str_to_ssize_t(_get_next_line());
     }
     if(_content_length == -1)
       throw http::StatusException(400);

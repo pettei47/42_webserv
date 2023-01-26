@@ -1,18 +1,20 @@
-#ifndef HTTPRESPONSE_HPP
-#define HTTPRESPONSE_HPP
+#ifndef RESPONSE_HPP
+#define RESPONSE_HPP
 
-#include "CGIPython.hpp"
-#include "FileData.hpp"
+#include <map>
+#include <sys/socket.h>
+#include <dirent.h>
+#include <sstream>
+#include "ft_util.hpp"
 #include "http_util.hpp"
+#include "HttpInfo.hpp"
 #include "Body.hpp"
 #include "Header.hpp"
-#include "HttpInfo.hpp"
 #include "Message.hpp"
 #include "Status.hpp"
 #include "HttpString.hpp"
-#include "ft_util.hpp"
-#include <map>
-#include <sys/socket.h>
+#include "CGIPython.hpp"
+#include "FileData.hpp"
 
 class Response : public Message
 {

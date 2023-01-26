@@ -1,4 +1,4 @@
-#include "ft_signal.hpp"
+#include "webserv.hpp"
 
 static void _stop(int sig)
 {

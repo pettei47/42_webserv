@@ -27,6 +27,7 @@
 #include "ft_signal.hpp"
 #include "Config.hpp"
 #include "tester.hpp"
+#include "Cluster.hpp"
 
 namespace webserv
 {
@@ -53,16 +54,6 @@ public:
     (void)id;
 #endif
   }
-};
-
-enum phase
-{
-  RECV,
-  WRITE,
-  READ,
-  CGI,
-  SEND,
-  CLOSE
 };
 
 #endif

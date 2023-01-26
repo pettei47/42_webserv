@@ -1,6 +1,5 @@
 #include "HttpString.hpp"
 #include "http_util.hpp"
-#include "Utility.hpp"
 #include <iostream>
 #include <stdexcept> /* out_of_range */
 #include <string>

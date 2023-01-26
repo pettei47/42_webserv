@@ -2,7 +2,6 @@
 #define PARSE_HPP
 
 #include "ft_util.hpp"
-#include "webserv.hpp"
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>

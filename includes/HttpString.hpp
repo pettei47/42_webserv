@@ -1,6 +1,7 @@
 #ifndef HTTPSTRING_HPP
 #define HTTPSTRING_HPP
 
+#include "ft_util.hpp"
 #include <limits.h>
 #include <stdint.h>
 #include <string>

@@ -35,11 +35,21 @@ namespace ft
   std::string trim_space(const std::string& str);
   std::string get_file_ext(const std::string& filepath);
   void        set_fd(int fd, fd_set& set, int& max_fd);
-  bool        isset_clear_fd(int fd, fd_set& set);
-  size_t      unsigned_decimal_str_to_ssize_t(std::string str);
-  size_t      hex_str_to_ssize_t(std::string str);
+  bool        clear_fd(int fd, fd_set& set);
+  ssize_t     unsigned_decimal_str_to_ssize_t(std::string str);
+  ssize_t     hex_str_to_ssize_t(std::string str);
   bool        end_with(const std::string& str, char c);
   std::string clean_uri(std::string const& uri);
 } // namespace ft
+
+enum phase
+{
+  RECV,
+  WRITE,
+  READ,
+  CGI,
+  SEND,
+  CLOSE
+};
 
 #endif
