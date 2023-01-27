@@ -31,7 +31,7 @@
 
 namespace webserv
 {
-  const static std::string DEFAULT_ROOT = "./test/";
+  const static std::string DEFAULT_ROOT = "./path/";
 };
 
 class Log
