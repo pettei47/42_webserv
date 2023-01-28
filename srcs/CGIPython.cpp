@@ -80,7 +80,7 @@ void CGIPython::_make_arg(char*** arg)
 {
   std::string python_path = _info.location->cgi_path;
   int delete_flag = 0;
-  char** arg_list = NULL;
+  char**  arg_list = NULL;
   try
   {
     arg_list = new char*[3];

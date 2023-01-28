@@ -214,6 +214,7 @@ Server  Config::_default_server()
 
 /**
  * @brief デフォルトのLocation構造体を返す
+ * TODO: この辺ハードコードになってるけど変数か環境変数で渡すようにしたい
  */
 Location  Config::_default_location()
 {
@@ -225,7 +226,7 @@ Location  Config::_default_location()
   location.autoindex = false;
   location.cgi_path = "";
   location.upload_enable = false;
-  location.upload_path = "./test/upload/";
+  location.upload_path = "./path/upload/";
   location.client_max_body_size = 1 * 1024 * 1024;
   return (location);
 }
