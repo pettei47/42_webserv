@@ -19,7 +19,7 @@ class Socket
 private:
   std::string           _host;
   size_t                _port;
-  int                   _lfd; //TODO: lfdのlは何か確認する
+  int                   _lfd; //TODO: lfdのlは何か確認する -> listen fd
   std::list<Connection> _connections;
   std::vector<Server>   _servers;
 
