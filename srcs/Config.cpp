@@ -229,7 +229,7 @@ Location  Config::_default_location()
   location.autoindex = false;
   location.cgi_path = "";
   location.upload_enable = false;
-  location.upload_path = "./path/upload/";
+  location.upload_path = "./pages/upload/";
   location.client_max_body_size = 1 * 1024 * 1024;
   return (location);
 }
