@@ -104,8 +104,9 @@ void Body::_set_autoindex_body(std::string script_name, std::string dirpath)
 }
 
 /**
- * @brief 500エラー用のページを作成する
+ * @brief エラー用のページを作成する
  * @return error時falseを返す
+ * TODO: エラーページがconfigで設定されているとき、そっちのページを表示するようにする
  */
 bool Body::set_error_default_body(int status_code)
 {
