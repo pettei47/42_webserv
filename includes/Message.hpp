@@ -11,8 +11,8 @@ class Message
 public:
   enum parse_phase
   {
-    AWAIT,
-    START_LINE,
+    START,
+    FIRST_LINE,
     HEADER,
     BODY,
     DONE

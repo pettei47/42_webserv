@@ -1,13 +1,13 @@
 #include "Message.hpp"
 
 Message::Message()
-  : _parse_phase(AWAIT)
+  : _parse_phase(START)
 {
   _raw_data.index = 0;
 }
 
 Message::Message(std::string delim)
-  : _parse_phase(AWAIT)
+  : _parse_phase(START)
   , _delim(delim)
 {
   _raw_data.index = 0;
@@ -61,7 +61,7 @@ std::string Message::_get_next_word(bool eol, size_t max, int status_code)
 
 void Message::_retrieve_startline()
 {
-  if(_parse_phase != START_LINE)
+  if(_parse_phase != FIRST_LINE)
     return;
 
   _parse_startline();

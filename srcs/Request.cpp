@@ -43,10 +43,10 @@ bool Request::handle_request()
   {
     switch(_parse_phase)
     {
-    case AWAIT:
-      _ignore_empty_lines();
+    case START:
+      _parse_phase = FIRST_LINE;
       /* Falls through. */
-    case START_LINE:
+    case FIRST_LINE:
       _retrieve_startline();
       /* Falls through. */
     case HEADER:
@@ -83,7 +83,7 @@ void Request::_ignore_empty_lines()
   }
   _raw_data.buf.erase(index);
 
-  _parse_phase = START_LINE;
+  _parse_phase = FIRST_LINE;
 }
 
 void Request::_parse_startline()
@@ -350,7 +350,7 @@ void Request::append_raw_data(char* buf, ssize_t len)
  */
 void Request::show_request(void) const
 {
-#if DEBUG_ACTIVE == 1
+#if DEBUG_MODE == 1
   std::cout << " Request Info" << std::endl;
   std::cout << "  - method: " << _method << std::endl;
   std::cout << "  - uri: '" << _uri << "'" << std::endl;

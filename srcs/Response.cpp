@@ -473,7 +473,7 @@ void Response::_parse_message()
 {
   switch(_parse_phase)
   {
-  case AWAIT:
+  case START:
     _parse_phase = HEADER;
     /* Falls through. */
   case HEADER:
