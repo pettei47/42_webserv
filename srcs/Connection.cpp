@@ -9,10 +9,8 @@ Connection::Connection(int fd, std::vector< Server >& servers)
   , _servers(servers)
   , _request(_servers)
 {
-#if DEBUG_MODE == 1
   _total_connections += 1;
   _id = _total_connections;
-#endif
   Log("Connection Established", _id);
 }
 

@@ -91,8 +91,8 @@ void  Socket::open_listenfd()
   freeaddrinfo(results);
   if(!p)
     throw SocketException("bind");
+  //NONBLOCKフラグ = 非同期処理にする
   if(fcntl(_lfd, F_SETFL, O_NONBLOCK) == -1)
-  //TODO: NONBLOCKフラグについて調べる。
     throw SocketException("fcntl");
   _listen();
 }
