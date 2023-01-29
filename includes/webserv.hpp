@@ -1,10 +1,10 @@
 #ifndef WEBSERV_HPP
 #define WEBSERV_HPP
 
-#if DEBUG_ACTIVE == 1
-#	define DEBUG(x) std::cout << x << std::endl;
+#if DEBUG_MODE == 1
+# define DEBUG(x) std::cout << x << std::endl;
 #else
-#	define DEBUG(x)
+# define DEBUG(x)
 #endif
 
 #include <errno.h>

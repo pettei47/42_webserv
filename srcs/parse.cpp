@@ -223,13 +223,13 @@ bool  autoindex_to_bool(std::string autoindex, size_t line_num)
  */
 std::string replace(std::string src, std::string to_replace, std::string new_value)
 {
-	size_t start = 0;
-	while((start = src.find(to_replace, start)) != std::string::npos)
-	{
-		src.replace(start, to_replace.length(), new_value);
-		start += new_value.length();
-	}
-	return (src);
+  size_t start = 0;
+  while((start = src.find(to_replace, start)) != std::string::npos)
+  {
+    src.replace(start, to_replace.length(), new_value);
+    start += new_value.length();
+  }
+  return (src);
 }
 
 /**
@@ -238,15 +238,15 @@ std::string replace(std::string src, std::string to_replace, std::string new_val
  */
 bool check_path(std::string path)
 {
-	struct stat buffer;
+  struct stat buffer;
 
-	int exist = stat(path.c_str(), &buffer);
-	if(exist != 0)
+  int exist = stat(path.c_str(), &buffer);
+  if(exist != 0)
     return (false);
-	//通常のファイルの場合
-	if(S_ISREG(buffer.st_mode))
-		return (true);
-	//ディレクトリの場合
-	else
-		return (false);
+  //通常のファイルの場合
+  if(S_ISREG(buffer.st_mode))
+    return (true);
+  //ディレクトリの場合
+  else
+    return (false);
 }
