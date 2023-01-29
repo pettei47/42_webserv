@@ -89,7 +89,6 @@ void Response::_handle_error(int status_code)
   // エラー時にエラーが起きた場合と_filepathがない場合は、エラーページの読み込みを行わない
   if(now_status != 200 || _filepath.empty())
   {
-    //TODO: エラーページがconfigで設定されているとき、そっちのページを表示するようにする
     if(_body.set_error_default_body(_httpstatus.get_status_code()))
       _phase = SEND;
     else // errorページの設定に失敗した場合
@@ -596,7 +595,6 @@ void Response::_first_preparation()
   }
   else if(_filepath.empty())
   {
-    //TODO: エラーページがconfigで設定されているとき、そっちのページを表示するようにする
     if(_body.set_error_default_body(_httpstatus.get_status_code()))
       _phase = SEND;
     else // errorページの設定に失敗した場合
