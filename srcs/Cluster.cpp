@@ -48,31 +48,6 @@ Cluster::socket_itr Cluster::_get_server_socket(Server server)
 }
 
 /**
- * @brief _max_fdをセットする。
- */
-void  Cluster::_set_max_fd()
-{
-  _max_fd = 2;
-  for(socket_itr s_it = _sockets.begin(); s_it != _sockets.end(); ++s_it)
-  {
-    int fd = s_it->get_lfd();
-    _max_fd = _max_fd > fd ? _max_fd : fd;
-    for(Socket::connection_citr c_it = s_it->get_connections().begin();
-      c_it != s_it->get_connections().end(); ++c_it)
-    {
-      enum phase phase = c_it->get_phase();
-      const Response* response = c_it->get_response();
-
-      if(response == NULL || phase == SEND)
-        fd = c_it->get_cfd();
-      else
-        fd = response->get_fd();
-      _max_fd = _max_fd > fd ? _max_fd : fd;
-    }
-  }
-}
-
-/**
  * @brief 全てのsocketに、selectするためのfdをセットする
  */
 void  Cluster::_set_select_fds()
