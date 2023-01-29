@@ -68,7 +68,7 @@ public:
   ~Request();
 
   bool handle_request();
-  void append_raw_data(unsigned char* buf, ssize_t len);
+  void append_raw_data(char* buf, ssize_t len);
   void setup_default_http_info(HttpInfo& info) const;
   void setup_http_info(HttpInfo& info) const;
 

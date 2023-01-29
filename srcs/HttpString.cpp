@@ -42,7 +42,7 @@ void HttpString::clear()
   _str.clear();
 }
 
-unsigned char HttpString::operator[](size_t i) const
+char HttpString::operator[](size_t i) const
 {
   return _str[i];
 }
@@ -52,7 +52,7 @@ unsigned char HttpString::operator[](size_t i) const
  * @return 追加後のサイズを返す
  * @note reserve(内部のvectorのサイズ確保)に失敗した場合エラー送出
  */
-size_t HttpString::append(unsigned char* str, size_t len)
+size_t HttpString::append(char* str, size_t len)
 {
   size_t size = _str.size();
 
@@ -103,7 +103,7 @@ size_t HttpString::append(HttpString const& str)
   return size;
 }
 
-void HttpString::push_back(unsigned char c)
+void HttpString::push_back(char c)
 {
   _str.push_back(c);
 }
@@ -112,7 +112,7 @@ void HttpString::erase(size_t len, size_t pos)
 {
   if(len == 0)
     return;
-  std::vector< unsigned char >::iterator head = _str.begin();
+  std::vector< char >::iterator head = _str.begin();
   _str.erase(head + pos, head + pos + len);
 }
 
@@ -128,7 +128,7 @@ const std::string HttpString::std_str() const
   return ret;
 }
 
-unsigned char const* HttpString::data() const
+char const* HttpString::data() const
 {
   return &_str[0];
 }

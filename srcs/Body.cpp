@@ -24,7 +24,7 @@ const HttpString& Body::get_body() const
   return _body;
 }
 
-unsigned char const* Body::get_body_data() const
+char const* Body::get_body_data() const
 {
   return _body.data();
 }
@@ -55,7 +55,7 @@ size_t Body::get_body_size() const
 bool Body::_read_buf()
 {
   // ファイルの読み込み
-  unsigned char buf[_buf_size] = {0};
+  char buf[_buf_size] = {0};
   int n = read(_fd, buf, _buf_size);
   if(n < 0)
   {
@@ -90,7 +90,7 @@ void Body::read_body()
 
   close_fd();
   // 最後の改行の追加
-  unsigned char buf[2];
+  char buf[2];
   buf[0] = '\r';
   buf[1] = '\n';
   _body.append(buf, 2);

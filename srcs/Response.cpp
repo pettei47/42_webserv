@@ -421,7 +421,7 @@ void Response::_first_send()
  * @brief sendを行う
  * @note エラー処理未完成（今はsendが失敗したときの処理と一部だけsendできたときの処理が一緒）
  */
-void Response::_send_content(unsigned char const* content, size_t size)
+void Response::_send_content(char const* content, size_t size)
 {
   ssize_t ret = send(_connection_fd, content, size, 0);
   if(ret < 0 || static_cast< size_t >(ret) != size)

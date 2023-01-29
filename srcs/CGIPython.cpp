@@ -227,7 +227,7 @@ void CGIPython::_set_fd(int pipe_c2p[2], int pipe_p2c[2])
  */
 void CGIPython::_read()
 {
-  unsigned char buf[BUF_SIZE] = {0};
+  char buf[BUF_SIZE] = {0};
   int n = read(_read_fd, buf, BUF_SIZE);
   if(n < 0)
   {

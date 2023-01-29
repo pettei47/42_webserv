@@ -340,7 +340,7 @@ void Request::_validate_request()
     throw http::StatusException(405);
 }
 
-void Request::append_raw_data(unsigned char* buf, ssize_t len)
+void Request::append_raw_data(char* buf, ssize_t len)
 {
   _raw_data.buf.append(buf, len);
 }

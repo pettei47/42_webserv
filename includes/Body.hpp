@@ -34,7 +34,7 @@ public:
   int get_fd() const;
   bool get_ready() const;
   const HttpString& get_body() const;
-  unsigned char const* get_body_data() const;
+  char const* get_body_data() const;
   size_t get_all_body_size() const;
   size_t get_body_size() const;
 

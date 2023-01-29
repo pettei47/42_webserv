@@ -59,7 +59,7 @@ private:
   void _handle_send_error(int status_code);
   void _set_header();
   void _first_send();
-  void _send_content(unsigned char const* content, size_t size);
+  void _send_content(char const* content, size_t size);
   void _send();
   void _prepare_CGI();
   void _handle_cgi(fd_set& read_set, fd_set& write_set);

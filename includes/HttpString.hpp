@@ -10,11 +10,11 @@
 class HttpString
 {
 private:
-  std::vector< unsigned char > _str;
+  std::vector< char > _str;
 
 public:
-  typedef std::vector< unsigned char >::iterator iterator;
-  typedef std::vector< unsigned char >::const_iterator const_iterator;
+  typedef std::vector< char >::iterator iterator;
+  typedef std::vector< char >::const_iterator const_iterator;
 
   HttpString();
   HttpString(HttpString const& other);
@@ -27,16 +27,16 @@ public:
   size_t size() const;
   void clear();
 
-  unsigned char operator[](size_t i) const;
+  char operator[](size_t i) const;
 
-  size_t append(unsigned char* str, size_t len);
+  size_t append(char* str, size_t len);
   size_t append(std::string const& str);
   size_t append(HttpString const& str);
-  void push_back(unsigned char c);
+  void push_back(char c);
   void erase(size_t len, size_t pos = 0);
 
   const std::string std_str() const;
-  unsigned char const* data() const;
+  char const* data() const;
   size_t find(const std::string& str, size_t pos = 0) const;
   size_t find_first_of(const std::string& str, size_t pos = 0) const;
   size_t find_first_not_of(const std::string& str, size_t pos = 0) const;

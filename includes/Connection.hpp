@@ -31,7 +31,7 @@ private:
   static const size_t _max_buffer_size = 1024;
   static size_t       _total_connections;
 
-  unsigned char _buf[_max_buffer_size + 1];
+  char _buf[_max_buffer_size + 1];
 
 public:
   Connection(int fd, std::vector< Server >& servers);
