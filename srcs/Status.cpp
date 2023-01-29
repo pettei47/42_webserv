@@ -11,7 +11,7 @@ Status::StatusDescription::StatusDescription()
   description[307] = "Permanent Redirect";
   description[308] = "Moved Permanently";
   description[400] = "Bad request";
-  description[403] = "forbidden";
+  description[403] = "Forbidden";
   description[404] = "Not Found";
   description[405] = "Not allowed";
   description[413] = "Request Entity Too Large";
