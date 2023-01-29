@@ -35,13 +35,9 @@ void Response::_set_error_filepath()
   std::map< int, std::string >& error_pages = _info.server->error_pages;
   int status_code = _httpstatus.get_status_code();
   if(error_pages.find(status_code) == error_pages.end())
-  {
     _filepath = "";
-  }
   else
-  {
     _filepath = error_pages[status_code];
-  }
 }
 
 /**
@@ -50,13 +46,9 @@ void Response::_set_error_filepath()
 void Response::_set_filepath()
 {
   if(_httpstatus.is_success())
-  {
     _filepath = _info.location->root + _info.script_name;
-  }
   else
-  {
     _set_error_filepath();
-  }
   _filepath = ft::clean_uri(_filepath);
   _filedata.set_filepath(_filepath);
 }
@@ -75,9 +67,7 @@ std::string Response::_set_upload_filename()
 
   struct stat sb;
   for(size_t i = 1; stat(filename.c_str(), &sb) != -1; ++i)
-  {
     filename = timestamp + '_' + ft::to_string(i) + extention;
-  }
   return filename;
 }
 
@@ -99,21 +89,16 @@ void Response::_handle_error(int status_code)
   // エラー時にエラーが起きた場合と_filepathがない場合は、エラーページの読み込みを行わない
   if(now_status != 200 || _filepath.empty())
   {
+    //TODO: エラーページがconfigで設定されているとき、そっちのページを表示するようにする
     if(_body.set_error_default_body(_httpstatus.get_status_code()))
-    {
       _phase = SEND;
-    }
     else // errorページの設定に失敗した場合
-    {
       _phase = CLOSE;
-    }
   }
   else
   {
     if(_check_cgi()) // CGIの場合
-    {
       _prepare_CGI();
-    }
     else
     {
       _filedata.clear();
@@ -137,14 +122,10 @@ void Response::_open_and_set_fd(bool read)
     _fd = open(_filepath.c_str(), (O_NONBLOCK | O_RDONLY));
   }
   else
-  {
     _fd = open(_filepath.c_str(), (O_NONBLOCK | O_CREAT | O_WRONLY), 0600);
-  }
   _body.set_fd(_fd);
   if(_fd < 0)
-  {
     throw http::StatusException(500);
-  }
 }
 
 /**
@@ -163,9 +144,7 @@ bool Response::_check_index_file()
       break;
   }
   if(i == size)
-  {
     return false;
-  }
   _filepath += _info.location->index[i];
   return true;
 }
@@ -176,9 +155,7 @@ bool Response::_check_index_file()
 void Response::_prepare_get_with_slash()
 {
   if(!_filedata.is_dir())
-  {
     throw http::StatusException(404);
-  }
   if(!_check_index_file())
   {
     if(_info.location->autoindex)
@@ -187,9 +164,7 @@ void Response::_prepare_get_with_slash()
       _body._set_autoindex_body(_info.script_name, _filepath);
     }
     else
-    {
       throw http::StatusException(403);
-    }
   }
 }
 
@@ -199,9 +174,7 @@ void Response::_prepare_get_with_slash()
 void Response::_prepare_get_no_slash()
 {
   if(!_filedata.exist())
-  {
     throw http::StatusException(404);
-  }
   if(_filedata.is_dir())
   {
     _filepath += "/";
@@ -258,20 +231,14 @@ void Response::_prepare_read()
 void Response::_check_write()
 {
   if(_info.location == NULL)
-  {
     throw http::StatusException(500);
-  }
   if(!_filedata.is_dir())
-  {
     throw http::StatusException(403);
-  }
   std::string upload_path = _info.location->upload_path;
   upload_path += "/";
   upload_path = ft::clean_uri(upload_path);
   if(upload_path != _filepath)
-  {
     throw http::StatusException(403);
-  }
 }
 
 /**
@@ -303,17 +270,11 @@ void Response::_prepare_write()
 void Response::_handle_read_error(int status_code)
 {
   if(_body.get_ready())
-  {
     _body.close_fd();
-  }
   if(_first_response)
-  {
     _handle_error(status_code);
-  }
   else
-  {
     _phase = CLOSE;
-  }
 }
 
 /**
@@ -324,9 +285,7 @@ void Response::_handle_read_error(int status_code)
 void Response::_handle_write_error(int status_code)
 {
   if(_body.get_ready())
-  {
     _body.close_fd();
-  }
   _handle_error(status_code);
 }
 
@@ -380,9 +339,7 @@ void Response::_write()
 void Response::_handle_send_error(int status_code)
 {
   if(_body.get_ready())
-  {
     _body.close_fd();
-  }
   if(!_first_response || status_code == http::StatusException::CLOSE)
   {
     _phase = CLOSE;
@@ -615,9 +572,7 @@ void Response::_handle_delete()
 {
   Log("DELETE");
   if(!_filedata.exist())
-  {
     throw http::StatusException(404);
-  }
   if(_filedata.is_file())
   {
     if(unlink(_filepath.c_str()) == -1)
@@ -625,9 +580,7 @@ void Response::_handle_delete()
     _httpstatus.set_status_code(204);
   }
   else //not file
-  {
     throw http::StatusException(403);
-  }
   _phase = SEND;
 }
 
@@ -643,31 +596,22 @@ void Response::_first_preparation()
   }
   else if(_filepath.empty())
   {
+    //TODO: エラーページがconfigで設定されているとき、そっちのページを表示するようにする
     if(_body.set_error_default_body(_httpstatus.get_status_code()))
-    {
       _phase = SEND;
-    }
     else // errorページの設定に失敗した場合
-    {
       _phase = CLOSE;
-    }
   }
   else
   {
     try
     {
       if(_info.method == "GET")
-      {
         _prepare_get();
-      }
       else if(_info.method == "POST")
-      {
         _prepare_write();
-      }
       else if(_info.method == "DELETE")
-      {
         _handle_delete();
-      }
     }
     catch(const http::StatusException& e)
     {
@@ -696,9 +640,7 @@ Response::Response(HttpInfo& info, int connection_fd, int status_code)
   , _autoindex(false)
 {
   if(!_check_return_redirect())
-  {
     _set_filepath();
-  }
 }
 
 Response::~Response() { }
