@@ -32,6 +32,7 @@
 namespace webserv
 {
   const static std::string DEFAULT_ROOT = "./pages/";
+  const static std::string ERROR_PAGES = DEFAULT_ROOT + "error_pages/";
 };
 
 class Log

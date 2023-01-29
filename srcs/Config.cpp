@@ -98,7 +98,8 @@ void  Config::_parse_server_property(size_t n, Server& server)
   {
     if (line_items.size() != 3)
       throw ParseException(n, std::string(server_properties[PROP_ERROR_PAGE]) + "<code> <file>;");
-    server.error_pages[convert_to_size_t(line_items[1], n)] = line_items[2];
+    server.error_pages[convert_to_size_t(line_items[1], n)]
+      = webserv::ERROR_PAGES + line_items[2];
   }
   if (line_items[0] == server_properties[PROP_SERVER_ROOT])
   {
