@@ -16,12 +16,12 @@ class Config
     void      _parse_config(std::string filepath);
     void      _parse_server(size_t line_start, size_t line_end);
     void      _parse_server_property(size_t line, Server& server);
-    Location  _parse_location(size_t line_start, size_t line_end);
-    void      _parse_location_property(size_t line, Location& location);
+    Location  _parse_location(size_t line_start, size_t line_end, Server s);
+    void      _parse_location_property(size_t line, Location& location, Server s);
     void      _validate_config();
     void      _complete_config();
     Server    _default_server();
-    Location  _default_location();
+    Location  _default_location(Server s);
     bool      _check_redirect_status(std::string status);
 
     std::vector<std::string>  _file_contents;

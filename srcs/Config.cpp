@@ -60,7 +60,7 @@ void  Config::_parse_server(size_t start, size_t end)
       std::vector<std::string> line_items = split(_file_contents[i], " ");
       if (line_items.size() > 0 && line_items[0] == "location")
       {
-        server.locations.push_back(_parse_location(i, get_close_bracket_line(_file_contents, i)));
+        server.locations.push_back(_parse_location(i, get_close_bracket_line(_file_contents, i), server));
         i = get_close_bracket_line(_file_contents, i);
       }
       else
@@ -116,9 +116,9 @@ void  Config::_parse_server_property(size_t n, Server& server)
  * @param end: location directiveの終了位置, == "}"
  * @return location構造体
  */
-Location  Config::_parse_location(size_t start, size_t end)
+Location  Config::_parse_location(size_t start, size_t end, Server s)
 {
-  Location                  location = _default_location();
+  Location                  location = _default_location(s);
   std::vector<std::string>  line_items = split(_file_contents[start], " ");
 
   if (line_items.size() != 3)
@@ -127,7 +127,7 @@ Location  Config::_parse_location(size_t start, size_t end)
   for (size_t i = start + 1; i < end; ++i)
   {
     if (!is_skip(_file_contents[i]))
-      _parse_location_property(i, location);
+      _parse_location_property(i, location, s);
   }
   return (location);
 }
@@ -137,7 +137,7 @@ Location  Config::_parse_location(size_t start, size_t end)
  * @param n: Location directiveのチェック位置
  * @param location: Location構造体
  */
-void  Config::_parse_location_property(size_t n, Location& location)
+void  Config::_parse_location_property(size_t n, Location& location, Server server)
 {
   std::vector<std::string>  line_items = parse_property(_file_contents[n], n, "location");
 
@@ -152,7 +152,7 @@ void  Config::_parse_location_property(size_t n, Location& location)
     }
   }
   if (line_items[0] == location_properties[PROP_LOCATION_ROOT])
-    location.root = line_items[1];
+    location.root = server.root + line_items[1];
   if (line_items[0] == location_properties[PROP_AUTOINDEX])
     location.autoindex = autoindex_to_bool(line_items[1], n);
   if (line_items[0] == location_properties[PROP_INDEX])
@@ -220,7 +220,7 @@ Server  Config::_default_server()
  * @brief デフォルトのLocation構造体を返す
  * TODO: この辺ハードコードになってるけど変数か環境変数で渡すようにしたい
  */
-Location  Config::_default_location()
+Location  Config::_default_location(Server server)
 {
   Location location;
 
@@ -230,7 +230,7 @@ Location  Config::_default_location()
   location.autoindex = false;
   location.cgi_path = "";
   location.upload_enable = false;
-  location.upload_path = "./pages/upload/";
+  location.upload_path = server.root +  "/upload/";
   location.client_max_body_size = 1 * 1024 * 1024;
   return (location);
 }
@@ -246,7 +246,7 @@ void  Config::_complete_config(void)
   {
     size_t  locations_size = _servers[i].locations.size();
     if(locations_size == 0)
-      _servers[i].locations.push_back(_default_location());
+      _servers[i].locations.push_back(_default_location(_servers[i]));
     for(size_t j = 0; j < locations_size; ++j)
     {
       if(_servers[i].locations[j].methods.size() == 0)
