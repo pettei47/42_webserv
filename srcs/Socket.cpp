@@ -42,9 +42,10 @@ int Socket::accept_connection()
   int fd;
   try
   {
-    //TODO: acceptとfcntlについて調べる
+    // accept: 接続待ち(listen)しているsocketへの要求を受け付ける
     if((fd = ::accept(_lfd, NULL, NULL)) == -1)
       throw SocketException("accept");
+    // fcntl: fdをノンブロッキングにセットする（＝非同期処理できるようにする）
     if(fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
       throw SocketException("fcntl");
   }
