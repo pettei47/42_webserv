@@ -58,16 +58,12 @@ bool Body::_read_buf()
   char buf[_buf_size] = {0};
   int n = read(_fd, buf, _buf_size);
   if(n < 0)
-  {
     throw http::StatusException(500);
-  }
 
   _body.append(buf, n);
   _read_size += _body.size();
   if(_read_size > _body_size - 2 || (_read_size < _body_size - 2 && n == 0))
-  {
     throw http::StatusException(500);
-  }
   return (_read_size != _body_size - 2);
 }
 
@@ -79,14 +75,10 @@ void Body::read_body()
 {
   _body.clear();
   if(!_ready)
-  {
     throw http::StatusException(500);
-  }
   _ready = _read_buf();
   if(_ready)
-  {
     return;
-  }
 
   close_fd();
   // 最後の改行の追加

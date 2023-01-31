@@ -26,9 +26,7 @@ void CGIPython::_check_python()
   FileData filedata;
   filedata.set_filepath(_info.location->cgi_path.c_str());
   if(!filedata.is_file())
-  {
     throw http::StatusException(500);
-  }
 }
 
 /**
@@ -40,9 +38,7 @@ void CGIPython::_check_execute_file()
   FileData filedata;
   filedata.set_filepath(_filepath.c_str());
   if(!filedata.is_file())
-  {
     throw http::StatusException(404);
-  }
 }
 
 /**
@@ -92,13 +88,9 @@ void CGIPython::_make_arg(char*** arg)
   catch(const std::exception& e)
   {
     if(delete_flag == 2)
-    {
       delete arg_list[0];
-    }
     if(delete_flag >= 1)
-    {
       delete[] arg_list;
-    }
     throw http::StatusException(ARG);
   }
   std::strcpy(arg_list[0], python_path.c_str());
@@ -113,9 +105,7 @@ void CGIPython::_make_arg(char*** arg)
 void CGIPython::_set_pipe(int pipe_c2p[2], int pipe_p2c[2])
 {
   if(pipe(pipe_c2p) < 0)
-  {
     throw http::StatusException(PIPE);
-  }
   if(fcntl(pipe_c2p[0], F_SETFL, O_NONBLOCK) == -1 ||
      fcntl(pipe_c2p[1], F_SETFL, O_NONBLOCK) == -1)
   {
@@ -150,9 +140,7 @@ void CGIPython::_make_process()
 {
   _ch_pid = fork();
   if(_ch_pid == -1)
-  {
     throw http::StatusException(PROCESS);
-  }
 }
 
 /**
@@ -163,9 +151,7 @@ void CGIPython::_delete_resources(char** arg, int* pipe_c2p, int* pipe_p2c, int 
   if(flag > ARG)
   {
     for(int i = 0; arg[i]; ++i)
-    {
       delete[] arg[i];
-    }
     delete[] arg;
   }
   if(flag > PIPE)
@@ -187,18 +173,14 @@ void CGIPython::_child_process(int pipe_c2p[2], int pipe_p2c[2], char** arg, cha
 {
   close(pipe_c2p[0]);
   if(dup2(pipe_c2p[1], 1) == -1)
-  {
     std::exit(1);
-  }
   close(pipe_c2p[1]);
 
   if(_info.method == "POST")
   {
     close(pipe_p2c[1]);
     if(dup2(pipe_p2c[0], 0) == -1)
-    {
       std::exit(1);
-    }
     close(pipe_p2c[0]);
   }
 
@@ -230,9 +212,7 @@ void CGIPython::_read()
   char buf[BUF_SIZE] = {0};
   int n = read(_read_fd, buf, BUF_SIZE);
   if(n < 0)
-  {
     throw http::StatusException(500);
-  }
   _data.append(buf, n);
 
   if(n == 0)
@@ -251,9 +231,7 @@ void CGIPython::_write()
   size_t send_size = send_str.size();
   ssize_t n = write(_write_fd, send_str.data(), send_size);
   if(n < 0 || static_cast< size_t >(n) != send_size)
-  {
     throw http::StatusException(500);
-  }
   _sent_size += send_size;
   if(_sent_size == _info.body.size())
   {
@@ -320,9 +298,7 @@ enum phase CGIPython::first_preparation()
   }
 
   if(_ch_pid == 0)
-  {
     _child_process(pipe_c2p, pipe_p2c, arg, env.get_c_env());
-  }
   _time.start();
   _delete_resources(arg, NULL, NULL, PIPE);
   _set_fd(pipe_c2p, pipe_p2c);
@@ -338,13 +314,9 @@ enum phase CGIPython::first_preparation()
 void CGIPython::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const
 {
   if(_write_fd != -1)
-  {
     ft::set_fd(_write_fd, write_set, max_fd);
-  }
   if(_read_fd != -1)
-  {
     ft::set_fd(_read_fd, read_set, max_fd);
-  }
 }
 
 /**
@@ -375,9 +347,7 @@ enum phase CGIPython::check_and_handle(fd_set& read_set, fd_set& write_set)
       return SEND;
     }
     else if(_time.check())
-    {
       _kill_process();
-    }
   }
   catch(const http::StatusException& e)
   {
