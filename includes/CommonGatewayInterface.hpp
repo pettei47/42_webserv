@@ -15,7 +15,7 @@
 #include "TimeManage.hpp"
 #include "ft_util.hpp"
 
-class CGIPython
+class CommonGatewayInterface
 {
 private:
   enum cgiphase
@@ -56,12 +56,12 @@ private:
   void  _kill_process();
 
 public:
-  CGIPython(HttpInfo& info,
+  CommonGatewayInterface(HttpInfo& info,
         Status& httpstatus,
         Header& httpheader,
         Body& body,
         std::string& filepath);
-  ~CGIPython();
+  ~CommonGatewayInterface();
 
   enum phase  first_preparation();
   void        set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const;
@@ -70,9 +70,9 @@ public:
   HttpString  get_data() const;
 
 private:
-  CGIPython();
-  CGIPython(CGIPython const& other);
-  CGIPython& operator=(CGIPython const& other);
+  CommonGatewayInterface();
+  CommonGatewayInterface(CommonGatewayInterface const& other);
+  CommonGatewayInterface& operator=(CommonGatewayInterface const& other);
 };
 
 #endif

@@ -13,7 +13,7 @@
 #include "Message.hpp"
 #include "Status.hpp"
 #include "HttpString.hpp"
-#include "CGIPython.hpp"
+#include "CommonGatewayInterface.hpp"
 #include "FileData.hpp"
 
 class Response : public Message
@@ -27,7 +27,7 @@ private:
   Header _httpheader;
   HttpInfo& _info;
   Body _body;
-  CGIPython _cgi;
+  CommonGatewayInterface _cgi;
   bool _first_response;
   size_t _send_size;
   bool _autoindex;

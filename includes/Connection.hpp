@@ -4,7 +4,7 @@
 #include "http_util.hpp"
 #include "ft_util.hpp"
 #include "HttpInfo.hpp"
-#include "CGIPython.hpp"
+#include "CommonGatewayInterface.hpp"
 #include "Request.hpp"
 #include "Response.hpp"
 #include "Server.hpp"

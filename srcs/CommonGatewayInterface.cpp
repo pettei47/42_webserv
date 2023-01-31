@@ -1,6 +1,6 @@
 #include "webserv.hpp"
 
-CGIPython::CGIPython(HttpInfo& info,
+CommonGatewayInterface::CommonGatewayInterface(HttpInfo& info,
           Status& httpstatus,
           Header& httpheader,
           Body& body,
@@ -15,13 +15,13 @@ CGIPython::CGIPython(HttpInfo& info,
   , _sent_size(0)
 { }
 
-CGIPython::~CGIPython() { }
+CommonGatewayInterface::~CommonGatewayInterface() { }
 
 /**
  * @brief pythonの確認を行う
  * @note エラー時500送出
  */
-void CGIPython::_check_python()
+void CommonGatewayInterface::_check_python()
 {
   FileData filedata;
   filedata.set_filepath(_info.location->cgi_path.c_str());
@@ -33,7 +33,7 @@ void CGIPython::_check_python()
  * @brief 実行するファイルの確認を行う
  * @note エラー時404送出
  */
-void CGIPython::_check_execute_file()
+void CommonGatewayInterface::_check_execute_file()
 {
   FileData filedata;
   filedata.set_filepath(_filepath.c_str());
@@ -44,7 +44,7 @@ void CGIPython::_check_execute_file()
 /**
  * @brief envの設定を行う
  */
-void CGIPython::_set_env(EnvVar& env)
+void CommonGatewayInterface::_set_env(EnvVar& env)
 {
   try
   {
@@ -72,7 +72,7 @@ void CGIPython::_set_env(EnvVar& env)
 /**
  * @brief argの設定を行う
  */
-void CGIPython::_make_arg(char*** arg)
+void CommonGatewayInterface::_make_arg(char*** arg)
 {
   std::string python_path = _info.location->cgi_path;
   int delete_flag = 0;
@@ -102,7 +102,7 @@ void CGIPython::_make_arg(char*** arg)
 /**
  * @brief pipeを行う
  */
-void CGIPython::_set_pipe(int pipe_c2p[2], int pipe_p2c[2])
+void CommonGatewayInterface::_set_pipe(int pipe_c2p[2], int pipe_p2c[2])
 {
   if(pipe(pipe_c2p) < 0)
     throw http::StatusException(PIPE);
@@ -136,7 +136,7 @@ void CGIPython::_set_pipe(int pipe_c2p[2], int pipe_p2c[2])
 /**
  * @brief processの作成を行う
  */
-void CGIPython::_make_process()
+void CommonGatewayInterface::_make_process()
 {
   _ch_pid = fork();
   if(_ch_pid == -1)
@@ -146,7 +146,7 @@ void CGIPython::_make_process()
 /**
  * @brief flagによって、どのリソースを解放するか決める
  */
-void CGIPython::_delete_resources(char** arg, int* pipe_c2p, int* pipe_p2c, int flag)
+void CommonGatewayInterface::_delete_resources(char** arg, int* pipe_c2p, int* pipe_p2c, int flag)
 {
   if(flag > ARG)
   {
@@ -169,7 +169,7 @@ void CGIPython::_delete_resources(char** arg, int* pipe_c2p, int* pipe_p2c, int 
 /**
  * @brief 子プロセスの処理を行う
  */
-void CGIPython::_child_process(int pipe_c2p[2], int pipe_p2c[2], char** arg, char** env)
+void CommonGatewayInterface::_child_process(int pipe_c2p[2], int pipe_p2c[2], char** arg, char** env)
 {
   close(pipe_c2p[0]);
   if(dup2(pipe_c2p[1], 1) == -1)
@@ -192,7 +192,7 @@ void CGIPython::_child_process(int pipe_c2p[2], int pipe_p2c[2], char** arg, cha
 /**
  * @brief read_fdとwrite_fdの設定と必要のないfdのクローズ
  */
-void CGIPython::_set_fd(int pipe_c2p[2], int pipe_p2c[2])
+void CommonGatewayInterface::_set_fd(int pipe_c2p[2], int pipe_p2c[2])
 {
   close(pipe_c2p[1]);
   _read_fd = pipe_c2p[0];
@@ -207,7 +207,7 @@ void CGIPython::_set_fd(int pipe_c2p[2], int pipe_p2c[2])
 /**
  * @brief cgiからの返答をreadする
  */
-void CGIPython::_read()
+void CommonGatewayInterface::_read()
 {
   char buf[BUF_SIZE] = {0};
   int n = read(_read_fd, buf, BUF_SIZE);
@@ -225,7 +225,7 @@ void CGIPython::_read()
 /**
  * @brief cgiにwriteする
  */
-void CGIPython::_write()
+void CommonGatewayInterface::_write()
 {
   HttpString send_str = _info.body.substr(_sent_size, BUF_SIZE);
   size_t send_size = send_str.size();
@@ -245,7 +245,7 @@ void CGIPython::_write()
  * @param status: error status
  * @note この関数は必ずerror送出する
  */
-void CGIPython::_read_or_write_error(int status)
+void CommonGatewayInterface::_read_or_write_error(int status)
 {
   if(_read_fd != -1)
   {
@@ -264,7 +264,7 @@ void CGIPython::_read_or_write_error(int status)
  * @brief processをkillする
  * @note この関数は必ずerror送出する
  */
-void CGIPython::_kill_process()
+void CommonGatewayInterface::_kill_process()
 {
   kill(_ch_pid, SIGTERM); // SIGKILLもありだがどちらがいいか
   throw http::StatusException(504);
@@ -274,7 +274,7 @@ void CGIPython::_kill_process()
  * @brief 最初の処理を行う
  * @note エラー時はStatusExceptionの送出
  */
-enum phase CGIPython::first_preparation()
+enum phase CommonGatewayInterface::first_preparation()
 {
   EnvVar env;
   char** arg = NULL;
@@ -311,7 +311,7 @@ enum phase CGIPython::first_preparation()
  * @param write_set: write用のset
  * @param max_fd: fdのmax値
  */
-void CGIPython::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const
+void CommonGatewayInterface::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const
 {
   if(_write_fd != -1)
     ft::set_fd(_write_fd, write_set, max_fd);
@@ -326,7 +326,7 @@ void CGIPython::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) 
  * @return phase
  * @note エラー時はStatusExceptionの送出
  */
-enum phase CGIPython::check_and_handle(fd_set& read_set, fd_set& write_set)
+enum phase CommonGatewayInterface::check_and_handle(fd_set& read_set, fd_set& write_set)
 {
   // 時間制限チェック
   try
@@ -360,7 +360,7 @@ enum phase CGIPython::check_and_handle(fd_set& read_set, fd_set& write_set)
   return CGI;
 }
 
-HttpString CGIPython::get_data() const
+HttpString CommonGatewayInterface::get_data() const
 {
   return _data;
 }
