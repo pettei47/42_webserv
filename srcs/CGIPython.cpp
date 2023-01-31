@@ -230,7 +230,7 @@ void CGIPython::_write()
   HttpString send_str = _info.body.substr(_sent_size, BUF_SIZE);
   size_t send_size = send_str.size();
   ssize_t n = write(_write_fd, send_str.data(), send_size);
-  if(n < 0 || static_cast< size_t >(n) != send_size)
+  if(n <= 0 || static_cast< size_t >(n) != send_size)
     throw http::StatusException(500);
   _sent_size += send_size;
   if(_sent_size == _info.body.size())
