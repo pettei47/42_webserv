@@ -381,7 +381,7 @@ void Response::_first_send()
 void Response::_send_content(char const* content, size_t size)
 {
   ssize_t ret = send(_connection_fd, content, size, 0);
-  if(ret < 0 || static_cast< size_t >(ret) != size)
+  if(ret <= 0 || static_cast< size_t >(ret) != size)
     throw http::StatusException(http::StatusException::CLOSE);
 }
 
