@@ -297,7 +297,6 @@ void Request::_retrieve_header()
 void Request::_parse_body()
 {
   HttpString new_body_chunk;
-  bool re_recv = false;
 
   switch(_body_type)
   {
@@ -310,19 +309,15 @@ void Request::_parse_body()
     }
     if(_content_length == -1)
       throw http::StatusException(400);
-    if(_content_length > 0)
-      re_recv = true;
     /* Falls through. */
   case CONTENT_LENGTH:
     new_body_chunk = _raw_data.buf.substr(_raw_data.index, _content_length);
     _content_length -= new_body_chunk.size();
     _raw_data.index += new_body_chunk.size();
     _body.append(new_body_chunk);
-    if(_content_length > 0)
-      re_recv = true;
-    if(re_recv)
-      throw ReRecvException();
   default:
+    if(_content_length > 0)
+      throw ReRecvException();
     break;
   }
 }

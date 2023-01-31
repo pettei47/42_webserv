@@ -445,12 +445,13 @@ void Response::_parse_message()
 
 void Response::_retrieve_header()
 {
-  Message::_retrieve_header();
-}
+  if(_parse_phase != HEADER)
+    return;
 
-void Response::_retrieve_body()
-{
-  Message::_retrieve_body();
+  _parse_header();
+  _validate_header();
+
+  _parse_phase = BODY;
 }
 
 /**

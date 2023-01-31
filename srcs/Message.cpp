@@ -70,16 +70,7 @@ void Message::_retrieve_startline()
   _parse_phase = HEADER;
 }
 
-void Message::_retrieve_header()
-{
-  if(_parse_phase != HEADER)
-    return;
-
-  _parse_header();
-  _validate_header();
-
-  _parse_phase = BODY;
-}
+void Message::_retrieve_header() { }
 
 void Message::_retrieve_body()
 {

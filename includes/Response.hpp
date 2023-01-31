@@ -68,7 +68,6 @@ private:
   void _first_preparation();
 
   void _retrieve_header();
-  void _retrieve_body();
 
   void _parse_message();
   void _parse_header();
