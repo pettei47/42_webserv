@@ -79,8 +79,8 @@ void  Config::_parse_server_property(size_t n, Server& server)
 {
   std::vector<std::string>  line_items = parse_property(_file_contents[n], n, "server");
 
-  // TODO: line_items = null のとき死にそう
-  //       -> parse_propertyの方で、result.size < 2はthrowされてるのでOK
+  // line_items = null のとき死にそう
+  //  -> parse_propertyの方で、result.size < 2はthrowされてるのでOK
   if (line_items[0] == server_properties[PROP_LISTEN])
   {
     if (line_items.size() != 3)
@@ -103,8 +103,8 @@ void  Config::_parse_server_property(size_t n, Server& server)
   }
   if (line_items[0] == server_properties[PROP_SERVER_ROOT])
   {
-    // TODO: line_items.size() < 2のとき死にそう
-    //       -> parse_propertyの方で、result.size < 2はthrowされてるのでOK
+    // line_items.size() < 2のとき死にそう
+    //  -> parse_propertyの方で、result.size < 2はthrowされてるのでOK
     server.root = line_items[1];
   }
 }
@@ -218,7 +218,6 @@ Server  Config::_default_server()
 
 /**
  * @brief デフォルトのLocation構造体を返す
- * TODO: この辺ハードコードになってるけど変数か環境変数で渡すようにしたい
  */
 Location  Config::_default_location(Server server)
 {
