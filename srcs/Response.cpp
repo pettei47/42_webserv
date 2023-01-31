@@ -315,7 +315,8 @@ void Response::_write()
 {
   try
   {
-    write(_fd, _info.body.data(), _info.body.size());
+    if(write(_fd, _info.body.data(), _info.body.size()) < 0)
+      throw std::exception();
     _body.close_fd();
     _httpstatus.set_status_code(201);
     _phase = SEND;
@@ -381,9 +382,7 @@ void Response::_send_content(char const* content, size_t size)
 {
   ssize_t ret = send(_connection_fd, content, size, 0);
   if(ret < 0 || static_cast< size_t >(ret) != size)
-  {
     throw http::StatusException(http::StatusException::CLOSE);
-  }
 }
 
 /**
@@ -400,9 +399,7 @@ void Response::_send()
       _first_response = false;
     }
     else
-    {
       _send_content(_body.get_body_data(), _body.get_body_size());
-    }
     _send_size += _body.get_body_size();
     _phase = _body.get_ready() ? READ : CLOSE;
     if(_phase == CLOSE && _send_size != _body.get_all_body_size())
@@ -591,9 +588,7 @@ void Response::_first_preparation()
 {
   Log(_filepath.c_str());
   if(_check_return_redirect())
-  {
     _prepare_redirect();
-  }
   else if(_filepath.empty())
   {
     if(_body.set_error_default_body(_httpstatus.get_status_code()))
