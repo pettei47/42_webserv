@@ -34,7 +34,7 @@ void Response::_set_error_filepath()
   }
   std::map< int, std::string >& error_pages = _info.server->error_pages;
   int status_code = _httpstatus.get_status_code();
-  if(error_pages.find(status_code) == error_pages.end())
+  if(error_pages.count(status_code) == 0)
     _filepath = "";
   else
     _filepath = error_pages[status_code];
@@ -545,20 +545,20 @@ void Response::_handle_cgi(fd_set& read_set, fd_set& write_set)
 void Response::_prepare_redirect(bool to_directory)
 {
   int status;
-  std::string pass;
+  std::string path;
 
   if(to_directory)
   {
     status = 301;
-    pass = http::generate_uri_head(*_info.server) + _info.script_name + '/';
+    path = http::generate_uri_head(*_info.server) + _info.script_name + '/';
   }
   else
   {
     status = _info.location->redirect.begin()->first;
-    pass = _info.location->redirect.begin()->second;
+    path = _info.location->redirect.begin()->second;
   }
   _httpstatus.set_status_code(status);
-  _httpheader["Location"] = pass;
+  _httpheader["Location"] = path;
   _phase = SEND;
 }
 

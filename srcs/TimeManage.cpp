@@ -19,5 +19,6 @@ void TimeManage::start()
 bool TimeManage::check() const
 {
   time_t now = time(NULL);
+  // _time < now しかありえないが、一応書いてる
   return _time < now && now - _time >= TIME_LIMIT;
 }

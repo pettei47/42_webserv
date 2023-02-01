@@ -168,7 +168,7 @@ void Request::_set_script_name(HttpInfo& info)
   size_t size = info.location->name.size();
   if(ft::end_with(info.location->name, '/'))
     --size;
-  info.script_name.replace(0, size, "");
+  info.script_name = info.script_name.substr(size);
   if(info.script_name.empty())
     info.script_name = "/";
 }

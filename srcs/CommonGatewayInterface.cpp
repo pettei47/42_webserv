@@ -81,8 +81,11 @@ void CommonGatewayInterface::_make_arg(char*** arg)
   {
     arg_list = new char*[3];
     delete_flag = 1;
+    // ::strdup()できると楽だが、malloc禁止なのでnewとexceptionでなんとかしてる
+    // python_path = ./python/python3.8
     arg_list[0] = new char[python_path.length() + 1];
     delete_flag = 2;
+    // filepath = /test.py
     arg_list[1] = new char[_filepath.length() + 1];
   }
   catch(const std::exception& e)
