@@ -53,11 +53,10 @@ void Connection::recv_request()
     return;
   }
 
-  bool request_complete = false;
   try
   {
     _request.append_raw_data(_buf, buf_size);
-    request_complete = _request.handle_request();
+    _request.handle_request();
   }
   catch(http::StatusException& e)
   {
@@ -66,7 +65,7 @@ void Connection::recv_request()
     _make_response(e.get_http_status());
     return;
   }
-  if(!request_complete)
+  if(_request.get_suspended())
   {
     Log("Request Suspeneded", _id);
     return;

@@ -25,6 +25,7 @@ private:
   Header _headers;
   ssize_t _content_length;
   HttpString _body;
+  bool  _suspended;
 
   enum body_type
   {
@@ -33,13 +34,6 @@ private:
     CHUNKED,
   };
   enum body_type _body_type;
-
-  class ReRecvException : public std::exception
-  {
-  public:
-    ReRecvException(){};
-    ~ReRecvException() throw(){};
-  };
 
   static const size_t _max_method_len = 6;
   static const size_t _max_request_uri_len = 1 << 13;
@@ -67,10 +61,11 @@ public:
   Request(std::vector< Server >& servers);
   ~Request();
 
-  bool handle_request();
+  void handle_request();
   void append_raw_data(char* buf, ssize_t len);
   void setup_default_http_info(HttpInfo& info) const;
   void setup_http_info(HttpInfo& info) const;
+  bool get_suspended();
 
   void show_request() const;
   Request(Request const& other);

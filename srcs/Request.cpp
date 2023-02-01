@@ -4,6 +4,7 @@ Request::Request(std::vector< Server >& servers)
   : Message(ft::CRLF)
   , _servers(servers)
   , _content_length(0)
+  , _suspended(false)
   , _body_type(NONE)
 { }
 
@@ -37,35 +38,39 @@ Request& Request::operator=(Request const& other)
 /**
  * @brief Connection, recv_requestから呼ばれる
  */
-bool Request::handle_request()
+void Request::handle_request()
 {
-  try
+  switch(_parse_phase)
   {
-    switch(_parse_phase)
-    {
-    case START:
-      _parse_phase = FIRST_LINE;
-      /* Falls through. */
-    case FIRST_LINE:
-      _retrieve_startline();
-      /* Falls through. */
-    case HEADER:
-      _retrieve_header();
-      /* Falls through. */
-    case BODY:
-      _retrieve_body();
-      _validate_request();
-      /* Falls through. */
-    default:
+  case START:
+    _parse_phase = FIRST_LINE;
+    /* Falls through. */
+  case FIRST_LINE:
+    _retrieve_startline();
+    std::cerr << "1 suspended: " << _suspended << std::endl;
+    if (_suspended)
       break;
-    }
+    /* Falls through. */
+  case HEADER:
+    _retrieve_header();
+    std::cerr << "2 suspended: " << _suspended << std::endl;
+    if (_suspended)
+      break;
+    /* Falls through. */
+  case BODY:
+    _retrieve_body();
+    std::cerr << "3 suspended: " << _suspended << std::endl;
+    if (_suspended)
+      break;
+    _validate_request();
+    /* Falls through. */
+  default:
+    std::cerr << "4 suspended: " << _suspended << std::endl;
+    break;
   }
-  catch(ReRecvException& e)
-  {
-    return false;
-  }
+#if DEBUG_MODE == 1
   show_request();
-  return true;
+#endif
 }
 
 void Request::_ignore_empty_lines()
@@ -79,7 +84,8 @@ void Request::_ignore_empty_lines()
   if(index == size)
   {
     _raw_data.buf.clear();
-    throw ReRecvException();
+    _suspended = true;
+    return ;
   }
   _raw_data.buf.erase(index);
 
@@ -89,8 +95,12 @@ void Request::_ignore_empty_lines()
 void Request::_parse_startline()
 {
   size_t eol = _raw_data.buf.find(_delim);
+  std::cerr << "_raw_data.buf" << _raw_data.buf << std::endl;
   if(eol == HttpString::npos)
-    throw ReRecvException();
+  {
+    _suspended = true;
+    return ;
+  }
 
   _method = _get_next_word(false, _max_method_len, 501);
   _uri = _get_next_word(false, _max_request_uri_len, 414);
@@ -184,7 +194,7 @@ void Request::_parse_header()
     _validate_headerfield(headerfield);
     _headers.append(headerfield);
   }
-  throw ReRecvException();
+  _suspended = true;
 }
 
 void Request::_validate_headerfield(std::pair< std::string, std::string >& headerfield)
@@ -304,7 +314,10 @@ void Request::_parse_body()
     if(_content_length == 0)
     {
       if(_raw_data.buf.find(_delim, _raw_data.index) == HttpString::npos)
-        throw ReRecvException();
+      {
+        _suspended = true;
+        return ;
+      }
       _content_length = ft::hex_str_to_ssize_t(_get_next_line());
     }
     if(_content_length == -1)
@@ -317,9 +330,13 @@ void Request::_parse_body()
     _body.append(new_body_chunk);
   default:
     if(_content_length > 0)
-      throw ReRecvException();
+    {
+      _suspended = true;
+      return ;
+    }
     break;
   }
+  _suspended = false;
 }
 
 void Request::_validate_request()
@@ -343,14 +360,15 @@ void Request::append_raw_data(char* buf, ssize_t len)
 /**
  * @brief HttpInfo構造体の情報を出力する、デバッグ用
  */
-void Request::show_request(void) const
+void Request::show_request() const
 {
-#if DEBUG_MODE == 1
   std::cout << " Request Info" << std::endl;
   std::cout << "  - method: " << _method << std::endl;
   std::cout << "  - uri: '" << _uri << "'" << std::endl;
   _headers.show_headers();
   std::cout << "  - body: '" << _body << "'" << std::endl;
-#else
-#endif
+}
+
+bool Request::get_suspended() {
+  return _suspended;
 }
