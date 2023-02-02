@@ -1,5 +1,24 @@
 #include "webserv.hpp"
 
+static void _exit_webserv(int sig)
+{
+  (void)sig;
+  std::exit(0);
+}
+
+/**
+ * @brief signalをセットする
+ */
+void set_signal()
+{
+  signal(SIGABRT, _exit_webserv);
+  signal(SIGINT, _exit_webserv);
+  signal(SIGTERM, _exit_webserv);
+  signal(SIGPIPE, SIG_IGN);
+  signal(SIGCHLD, SIG_IGN);
+}
+
+
 int main(int argc, char **argv)
 {
 #if TEST_MODE == 1

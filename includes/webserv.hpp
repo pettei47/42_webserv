@@ -20,11 +20,11 @@
 #include <climits>
 #include <sys/socket.h>
 #include <cstdlib>
+#include <signal.h>
 
 #include "ft_util.hpp"
 #include "parse.hpp"
 #include "Server.hpp"
-#include "ft_signal.hpp"
 #include "Config.hpp"
 #include "tester.hpp"
 #include "Cluster.hpp"

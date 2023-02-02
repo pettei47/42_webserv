@@ -2,7 +2,6 @@
 #define TESTER_HPP
 
 #include "Config.hpp"
-#include "ft_signal.hpp"
 #include "ft_util.hpp"
 #include "parse.hpp"
 #include "Server.hpp"
