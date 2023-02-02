@@ -78,7 +78,6 @@ void Connection::recv_request()
 /**
  * @brief Responseクラスを作成する
  * @param status_code: ステータスコード
- * @note TODO: エラー処理は未完成？
  */
 void Connection::_make_response(int status_code)
 {
@@ -107,6 +106,7 @@ ssize_t Connection::_recv()
   ssize_t buf_size = ::recv(_cfd, _buf, _max_buffer_size, 0);
   if(buf_size > 0)
     _buf[buf_size] = '\0';
+  // recvの戻り値が0以下の場合のエラー処理はこの関数の外でやってる
   return buf_size;
 }
 

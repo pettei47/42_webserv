@@ -1,5 +1,36 @@
 #include "Header.hpp"
 
+Header::Header()
+{
+  _set_default_header();
+}
+
+Header::Header(const Header& other)
+{
+  *this = other;
+}
+
+Header& Header::operator=(const Header& other)
+{
+  if(this != &other)
+    _headers = other._headers;
+  return *this;
+}
+
+Header::~Header(){}
+
+std::string&  Header::operator[](std::string key)
+{
+  if(_headers.find(key) == _headers.end())
+    _headers[key] = "";
+  return _headers[key];
+}
+
+const std::string&  Header::at(const std::string& key) const
+{
+  return _headers.at(key);
+}
+
 Header::ContentType::ContentType()
 {
   _types["txt"] = "text/plain";
@@ -51,37 +82,6 @@ std::string Header::content_type_to_ext() const
 void Header::_set_default_header()
 {
   _headers["Server"] = "webserv";
-}
-
-Header::Header()
-{
-  _set_default_header();
-}
-
-Header::Header(const Header& other)
-{
-  *this = other;
-}
-
-Header& Header::operator=(const Header& other)
-{
-  if(this != &other)
-    _headers = other._headers;
-  return *this;
-}
-
-Header::~Header(){}
-
-std::string&  Header::operator[](std::string key)
-{
-  if(_headers.find(key) == _headers.end())
-    _headers[key] = "";
-  return _headers[key];
-}
-
-const std::string&  Header::at(const std::string& key) const
-{
-  return _headers.at(key);
 }
 
 /**

@@ -1,5 +1,14 @@
 #include "webserv.hpp"
 
+EnvVar::EnvVar()
+  : _c_env(NULL)
+{ }
+
+EnvVar::~EnvVar()
+{
+  _delete_c_env();
+}
+
 /**
  * @brief _c_envのリソースを解放する
  */
@@ -14,15 +23,6 @@ void EnvVar::_delete_c_env()
     delete[] _c_env;
     _c_env = NULL;
   }
-}
-
-EnvVar::EnvVar()
-  : _c_env(NULL)
-{ }
-
-EnvVar::~EnvVar()
-{
-  _delete_c_env();
 }
 
 std::string& EnvVar::operator[](std::string key)

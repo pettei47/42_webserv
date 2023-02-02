@@ -2,7 +2,7 @@
 
 Body::Body()
   : _fd(0)
-  , _ready(false)
+  , _ongoing(false)
   , _read_size(0)
   , _body_size(0)
 { }
@@ -14,9 +14,9 @@ int Body::get_fd() const
   return _fd;
 }
 
-bool Body::get_ready() const
+bool Body::get_ongoing() const
 {
-  return _ready;
+  return _ongoing;
 }
 
 const HttpString& Body::get_body() const
@@ -74,10 +74,10 @@ bool Body::_read_buf()
 void Body::read_body()
 {
   _body.clear();
-  if(!_ready)
+  if(!_ongoing)
     throw http::StatusException(500);
-  _ready = _read_buf();
-  if(_ready)
+  _ongoing = _read_buf();
+  if(_ongoing)
     return;
 
   close_fd();
@@ -120,12 +120,12 @@ bool Body::set_error_default_body(int status_code)
 }
 
 /**
- * @brief fdを閉じて_ready=falseとする
+ * @brief fdを閉じて_ongoing=falseとする
  */
 void Body::close_fd()
 {
   close(_fd);
-  _ready = false;
+  _ongoing = false;
   _read_size = 0;
 }
 
@@ -133,7 +133,7 @@ void Body::set_fd(int fd)
 {
   _fd = fd;
   if(_fd >= 0)
-    _ready = true;
+    _ongoing = true;
 }
 
 /**

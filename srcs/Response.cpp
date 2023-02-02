@@ -1,5 +1,23 @@
 #include "webserv.hpp"
 
+Response::Response(HttpInfo& info, int connection_fd, int status_code)
+  : Message("\n")
+  , _fd(0)
+  , _connection_fd(connection_fd)
+  , _phase(RECV)
+  , _httpstatus(info.protocol_version, status_code)
+  , _info(info)
+  , _cgi(info, _httpstatus, _httpheader, _body, _filepath)
+  , _first_response(true)
+  , _send_size(0)
+  , _autoindex(false)
+{
+  if(!_check_return_redirect())
+    _set_filepath();
+}
+
+Response::~Response() { }
+
 /**
  * @brief cgiでレスポンスを作成するかどうかを判断する
  * @return cgiの場合はtrue
@@ -250,7 +268,7 @@ void Response::_prepare_write()
     _prepare_CGI();
     return;
   }
-  _check_write(); // post不可時エラー送出
+  _check_write(); // POST先のパスが使えない時にエラーになる
   std::string new_file_name = _set_upload_filename();
   _filepath = _filepath + '/' + new_file_name;
   _filepath = ft::clean_uri(_filepath);
@@ -268,7 +286,7 @@ void Response::_prepare_write()
  */
 void Response::_handle_read_error(int status_code)
 {
-  if(_body.get_ready())
+  if(_body.get_ongoing())
     _body.close_fd();
   if(_first_response)
     _handle_error(status_code);
@@ -283,7 +301,7 @@ void Response::_handle_read_error(int status_code)
  */
 void Response::_handle_write_error(int status_code)
 {
-  if(_body.get_ready())
+  if(_body.get_ongoing())
     _body.close_fd();
   _handle_error(status_code);
 }
@@ -338,7 +356,7 @@ void Response::_write()
  */
 void Response::_handle_send_error(int status_code)
 {
-  if(_body.get_ready())
+  if(_body.get_ongoing())
     _body.close_fd();
   if(!_first_response || status_code == http::StatusException::CLOSE)
   {
@@ -370,8 +388,7 @@ void Response::_first_send()
   str_message.append(_httpstatus.to_string());
   str_message.append(_httpheader.to_string());
   str_message.append(_body.get_body());
-  size_t content_size = str_message.size();
-  _send_content(str_message.data(), content_size);
+  _send_content(str_message.data(), str_message.size());
 }
 
 /**
@@ -401,7 +418,7 @@ void Response::_send()
     else
       _send_content(_body.get_body_data(), _body.get_body_size());
     _send_size += _body.get_body_size();
-    _phase = _body.get_ready() ? READ : CLOSE;
+    _phase = _body.get_ongoing() ? READ : CLOSE;
     if(_phase == CLOSE && _send_size != _body.get_all_body_size())
     {
       Log("send size error");
@@ -620,24 +637,6 @@ void Response::_first_preparation()
     }
   }
 }
-
-Response::Response(HttpInfo& info, int connection_fd, int status_code)
-  : Message("\n")
-  , _fd(0)
-  , _connection_fd(connection_fd)
-  , _phase(RECV)
-  , _httpstatus(info.protocol_version, status_code)
-  , _info(info)
-  , _cgi(info, _httpstatus, _httpheader, _body, _filepath)
-  , _first_response(true)
-  , _send_size(0)
-  , _autoindex(false)
-{
-  if(!_check_return_redirect())
-    _set_filepath();
-}
-
-Response::~Response() { }
 
 /**
  * @brief phaseに応じてレスポンスの処理を行う

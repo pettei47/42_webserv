@@ -1,5 +1,11 @@
 #include "webserv.hpp"
 
+FileData::FileData()
+  : _ready(false)
+{ }
+
+FileData::~FileData() { }
+
 /**
  * @brief statを行ってfileのデータを確認する
  * @return statが成功した場合true
@@ -13,12 +19,6 @@ bool FileData::_check_filedata()
   _ready = true;
   return true;
 }
-
-FileData::FileData()
-  : _ready(false)
-{ }
-
-FileData::~FileData() { }
 
 /**
  * @brief file情報をクリアにする

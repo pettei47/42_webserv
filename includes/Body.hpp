@@ -19,11 +19,11 @@ class Body
 private:
   static const int _buf_size = 8192;
 
-  int _fd;
-  bool _ready; // fdが有効な場合true
-  HttpString _body;
-  size_t _read_size;
-  size_t _body_size;
+  int         _fd;
+  bool        _ongoing; // fdが有効で、read中の場合true
+  HttpString  _body;
+  size_t      _read_size;
+  size_t      _body_size;
 
   bool _read_buf();
 
@@ -31,12 +31,12 @@ public:
   Body();
   ~Body();
 
-  int get_fd() const;
-  bool get_ready() const;
+  int               get_fd() const;
+  bool              get_ongoing() const;
   const HttpString& get_body() const;
-  char const* get_body_data() const;
-  size_t get_all_body_size() const;
-  size_t get_body_size() const;
+  char const*       get_body_data() const;
+  size_t            get_all_body_size() const;
+  size_t            get_body_size() const;
 
   void read_body();
   void _set_autoindex_body(std::string script_name, std::string dirpath);

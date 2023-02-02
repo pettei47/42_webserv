@@ -47,49 +47,26 @@ void Request::handle_request()
     /* Falls through. */
   case FIRST_LINE:
     _retrieve_startline();
-    std::cerr << "1 suspended: " << _suspended << std::endl;
     if (_suspended)
       break;
     /* Falls through. */
   case HEADER:
     _retrieve_header();
-    std::cerr << "2 suspended: " << _suspended << std::endl;
     if (_suspended)
       break;
     /* Falls through. */
   case BODY:
     _retrieve_body();
-    std::cerr << "3 suspended: " << _suspended << std::endl;
     if (_suspended)
       break;
     _validate_request();
     /* Falls through. */
   default:
-    std::cerr << "4 suspended: " << _suspended << std::endl;
     break;
   }
 #if DEBUG_MODE == 1
   show_request();
 #endif
-}
-
-void Request::_ignore_empty_lines()
-{
-  size_t len = _delim.length();
-  size_t size = _raw_data.buf.size();
-  size_t index = 0;
-  while(index <= size - len && _raw_data.buf.compare(index, len, _delim) == 0)
-    index += len;
-
-  if(index == size)
-  {
-    _raw_data.buf.clear();
-    _suspended = true;
-    return ;
-  }
-  _raw_data.buf.erase(index);
-
-  _parse_phase = FIRST_LINE;
 }
 
 void Request::_parse_startline()
