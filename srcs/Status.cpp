@@ -13,7 +13,7 @@ Status::StatusDescription::StatusDescription()
   description[400] = "Bad request";
   description[403] = "Forbidden";
   description[404] = "Not Found";
-  description[405] = "Not allowed";
+  description[405] = "Method Not allowed";
   description[413] = "Payload Too Large";
   description[414] = "URI Too Long";
   description[500] = "Internal Server Error";
