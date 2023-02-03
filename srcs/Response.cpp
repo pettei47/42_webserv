@@ -398,7 +398,7 @@ void Response::_first_send()
 void Response::_send_content(char const* content, size_t size)
 {
   ssize_t ret = send(_connection_fd, content, size, 0);
-  if(ret <= 0 || static_cast< size_t >(ret) != size)
+  if(ret < 0 || static_cast< size_t >(ret) != size) // sizeが0なことはないので、これで0も見ているとみなしてもらいたい
     throw http::StatusException(http::StatusException::CLOSE);
 }
 
@@ -453,9 +453,9 @@ void Response::_parse_message()
     _retrieve_body();
     /* Falls through. */
   default:
+    show_response();
     break;
   }
-  show_response();
 }
 
 void Response::_retrieve_header()
