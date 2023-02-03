@@ -14,7 +14,7 @@ Status::StatusDescription::StatusDescription()
   description[403] = "Forbidden";
   description[404] = "Not Found";
   description[405] = "Not allowed";
-  description[413] = "Request Entity Too Large";
+  description[413] = "Payload Too Large";
   description[414] = "URI Too Long";
   description[500] = "Internal Server Error";
   description[501] = "Not implemented";
