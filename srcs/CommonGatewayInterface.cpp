@@ -186,8 +186,9 @@ void CommonGatewayInterface::_child_process(int pipe_c2p[2], int pipe_p2c[2], ch
       std::exit(1);
     close(pipe_p2c[0]);
   }
-
-  execve(arg[0], arg, env);
+  // arg[0] = python3.8  arg[1] = cgi.sh
+  // arg = [python3.8, cgi.sh]
+  execve(arg[1], &arg[1], env);
 
   exit(1);
 }

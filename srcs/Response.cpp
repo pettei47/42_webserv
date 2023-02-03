@@ -25,7 +25,7 @@ Response::~Response() { }
  */
 bool Response::_check_cgi()
 {
-  return !_info.location->cgi_path.empty() && ft::get_file_ext(_filepath) == "py";
+  return !_info.location->cgi_path.empty(); // && ft::get_file_ext(_filepath) == "py";
 }
 
 /**
@@ -455,6 +455,7 @@ void Response::_parse_message()
   default:
     break;
   }
+  show_response();
 }
 
 void Response::_retrieve_header()
@@ -726,4 +727,12 @@ enum phase Response::check_and_handle(fd_set& read_set, fd_set& write_set)
 int Response::get_fd() const
 {
   return _fd;
+}
+
+void Response::show_response() const
+{
+  std::cout << " Response Info" << std::endl;
+  std::cout << "  - status_line: " << _status_line << std::endl;
+  _httpheader.show_headers();
+  std::cout << "  - body: '" << _body.get_body() << "'" << std::endl;
 }

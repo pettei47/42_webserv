@@ -80,6 +80,7 @@ public:
   enum phase handle_response();
   void set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const;
   enum phase check_and_handle(fd_set& read_set, fd_set& write_set);
+  void show_response() const;
 
   int get_fd() const;
 
