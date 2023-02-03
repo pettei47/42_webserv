@@ -168,7 +168,7 @@ void  Config::_parse_location_property(size_t n, Location& location, Server serv
   if (line_items[0] == location_properties[PROP_UPLOAD_ENABLE])
     location.upload_enable = autoindex_to_bool(line_items[1], n);
   if (line_items[0] == location_properties[PROP_UPLOAD_PATH])
-    location.upload_path = line_items[1];
+    location.upload_path = server.root + line_items[1];
   if (line_items[0] == location_properties[PROP_CLIENT_MAX_BODY_SIZE])
   {
     if (line_items.size() != 2)
