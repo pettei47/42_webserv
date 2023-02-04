@@ -87,7 +87,6 @@ void  Config::_parse_server_property(size_t n, Server& server)
       throw ParseException(n, std::string(server_properties[PROP_LISTEN]) + " <port> <host>;");
     server.port = convert_to_size_t(line_items[1], n);
     server.host = line_items[2];
-    // TODO: line_items[2]がhostに適さない値のときのチェックがなさそう？
   }
   if (line_items[0] == server_properties[PROP_SERVER_NAME])
   {
@@ -284,9 +283,6 @@ void Config::_validate_config()
           _servers[i].host = "localhost";
         if(_servers[j].host == "127.0.0.1")
           _servers[j].host = "localhost";
-        // TODO: このコメントアウトが何なのか確認する↓
-        //if(_servers[i].host == _servers[j].host && _servers[i].port == _servers[j].port)
-        //throw ParseException(0, "Two servers have the same host and port.");
       }
     }
   }
@@ -294,7 +290,7 @@ void Config::_validate_config()
 
 /**
  * @brief server構造体の情報を出力する、デバッグ用
- * TODO:これはserver構造体をclass化してそこにメソッド持たせた方が綺麗な気がする…？
+ *        これはserver構造体をclass化してそこにメソッド持たせた方が綺麗な気がする…？
  *      -> debug用なので余力があれば対応する
  */
 void  Config::show_servers()

@@ -109,7 +109,7 @@ namespace ft
    * @brief 符号なしstringをssize_tに変換する
    * @param str: 変換するstring
    * @return 数字以外の文字があった場合、SSIZE_MAXを超える場合-1
-   * TODO: これHeaderでしか使ってないのでHeaderの中に実装する
+   * これHeaderでしか使ってないのでHeaderの中に実装を移したいが、余力があったら
    */
   ssize_t unsigned_decimal_str_to_ssize_t(std::string str)
   {
@@ -135,7 +135,7 @@ namespace ft
    * @brief hex-stringをssize_tに変換する
    * @param str: 変換するstring
    * @return 数字以外の文字があった場合、SSIZE_MAXを超える場合-1
-   * TODO: これRequestでしか使ってないのでRequestの中に実装する
+   * これRequestでしか使ってないのでRequestの中に実装したいが、余力があったら
    */
   ssize_t hex_str_to_ssize_t(std::string str)
   {
@@ -165,7 +165,7 @@ namespace ft
    * @param s: string
    * @param c: char
    * @return あとで書く
-   * TODO: これRequestとResponseでしか使ってないのでhttp_utilの中に実装する
+   * これRequestとResponseでしか使ってないのでhttp_utilの中に実装したいが、余力があったら
    */
   bool end_with(const std::string& s, char c)
   {
@@ -178,7 +178,7 @@ namespace ft
    * @brief 説明書く
    * @param uri: string
    * @return あとで書く
-   * TODO: これResponseでしか使ってないのでResponseの中に実装する
+   * これResponseでしか使ってないのでResponseの中に実装したいが、余力があったら
    */
   std::string clean_uri(std::string const& uri)
   {

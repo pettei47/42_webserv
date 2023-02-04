@@ -5,7 +5,6 @@
  *        (Socketでlisten_fdを開放済みかどうか)をチェックして、
  *        未開放の場合は開けてから(新しいSocketを作ってから)_socketsに追加する。
  * @param config: configクラス
- * TODO: この関数の説明を山下くんに共有する
  */
 Cluster::Cluster(Config config): _max_fd(0)
 {
@@ -35,7 +34,6 @@ Cluster::~Cluster(){}
  * @param server: server
  * @return socket_itr:  開放済みのSocketを見つけたらそのイテレータを返す。
  *                      見つからなければend()のイテレータを返す。
- * TODO: この関数の説明を山下くんに共有する
  */
 Cluster::socket_itr Cluster::_get_server_socket(Server server)
 {
@@ -63,8 +61,7 @@ void  Cluster::_set_select_fds()
  * @brief メインループ。
  *        Socketは開いた状態（＝listenは開始済み）
  *        -> selectでfdが読み書き可能かどうかチェック
- *        -> 
- *        TODO: ここに処理の流れを書いておきたい。
+ *        -> ソケットごとにコネクションを作って
  */
 void Cluster::main_loop()
 {

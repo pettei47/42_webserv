@@ -100,7 +100,7 @@ void Connection::_make_response(int status_code)
 }
 
 /**
- * @brief TODO: この関数の説明を書く。
+ * @brief recvして読み込んだbuf末尾にヌル文字を入れる。エラー処理は外でやる。
  */
 ssize_t Connection::_recv()
 {
@@ -112,7 +112,7 @@ ssize_t Connection::_recv()
 }
 
 /**
- * @brief TODO: この関数の説明を書く。
+ * @brief コネクションをcloseする。
  */
 void Connection::close() const
 {
@@ -125,7 +125,6 @@ void Connection::close() const
  * @param read_set: read用のset
  * @param write_set: write用のset
  * @param max_fd: fdのmax値
- * TODO: この関数の使い所を確認する。
  */
 void Connection::set_select_fd(fd_set& read_set, fd_set& write_set, int& max_fd) const
 {

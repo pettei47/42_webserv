@@ -399,7 +399,6 @@ void Response::_first_send()
 
 /**
  * @brief sendを行う
- * @note TODO: エラー処理未完成（今はsendが失敗したときの処理と一部だけsendできたときの処理が一緒）
  */
 void Response::_send_content(char const* content, size_t size)
 {

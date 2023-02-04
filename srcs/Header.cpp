@@ -134,7 +134,7 @@ const std::string Header::to_string() const
 }
 
 /**
- * @brief TODO: この関数の説明を書く
+ * @brief デバッグ用：ヘッダーの中身を表示する
  */
 void  Header::show_headers() const
 {
@@ -143,7 +143,7 @@ void  Header::show_headers() const
     std::cout << "  - " << it->first << ": " << it->second << std::endl;
 }
 /**
- * @brief TODO: この関数の説明を書く
+ * @brief 渡されたkeyがヘッダーに存在するか調べる
  */
 bool  Header::contains(std::string key) const
 {
@@ -151,7 +151,7 @@ bool  Header::contains(std::string key) const
 }
 
 /**
- * @brief TODO: この関数の説明を書く
+ * @brief ヘッダーに項目を追加する
  */
 void Header::append(std::string key, std::string value)
 {
@@ -168,8 +168,7 @@ void Header::append(std::string key, std::string value)
 }
 
 /**
- * @brief TODO: この関数の説明を書く
- * TODO: これ必要か？確認する
+ * @brief ヘッダーに項目を追加する
  */
 void Header::append(std::pair<std::string, std::string> key_value)
 {
