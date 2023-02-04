@@ -51,7 +51,7 @@ void Response::_set_error_filepath()
     return;
   }
   std::map< int, std::string >& error_pages = _info.server->error_pages;
-  int status_code = _httpstatus.get_status_code();
+  int status_code = _status.get_status_code();
   if(error_pages.count(status_code) == 0)
     _filepath = "";
   else
