@@ -40,7 +40,7 @@ private:
   TimeManage    _time;
   size_t        _sent_size;
 
-  void  _check_python();
+  void  _check_cgi_path();
   void  _check_execute_file();
   void  _set_env(EnvVar& env);
   void  _make_arg(char*** arg);

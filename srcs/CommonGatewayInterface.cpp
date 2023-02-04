@@ -21,7 +21,7 @@ CommonGatewayInterface::~CommonGatewayInterface() { }
  * @brief pythonの確認を行う
  * @note エラー時500送出
  */
-void CommonGatewayInterface::_check_python()
+void CommonGatewayInterface::_check_cgi_path()
 {
   FileData filedata;
   filedata.set_filepath(_info.location->cgi_path.c_str());
@@ -74,7 +74,6 @@ void CommonGatewayInterface::_set_env(EnvVar& env)
  */
 void CommonGatewayInterface::_make_arg(char*** arg)
 {
-  std::string python_path = _info.location->cgi_path;
   int delete_flag = 0;
   char**  arg_list = NULL;
   try
@@ -82,8 +81,7 @@ void CommonGatewayInterface::_make_arg(char*** arg)
     arg_list = new char*[3];
     delete_flag = 1;
     // ::strdup()できると楽だが、malloc禁止なのでnewとexceptionでなんとかしてる
-    // python_path = ./python/python3.8
-    arg_list[0] = new char[python_path.length() + 1];
+    arg_list[0] = new char[_info.location->cgi_path.length() + 1];
     delete_flag = 2;
     // filepath = /test.py
     arg_list[1] = new char[_filepath.length() + 1];
@@ -96,7 +94,7 @@ void CommonGatewayInterface::_make_arg(char*** arg)
       delete[] arg_list;
     throw http::StatusException(ARG);
   }
-  std::strcpy(arg_list[0], python_path.c_str());
+  std::strcpy(arg_list[0], _info.location->cgi_path.c_str());
   std::strcpy(arg_list[1], _filepath.c_str());
   arg_list[2] = NULL;
   *arg = arg_list;
@@ -186,9 +184,8 @@ void CommonGatewayInterface::_child_process(int pipe_c2p[2], int pipe_p2c[2], ch
       std::exit(1);
     close(pipe_p2c[0]);
   }
-  // arg[0] = python3.8  arg[1] = cgi.sh
   // arg = [python3.8, cgi.sh]
-  execve(arg[1], &arg[1], env);
+  execve(arg[0], &arg[0], env);
 
   exit(1);
 }
@@ -285,7 +282,7 @@ enum phase CommonGatewayInterface::first_preparation()
   int pipe_c2p[2];
   int pipe_p2c[2];
 
-  _check_python();
+  _check_cgi_path();
   _check_execute_file();
   try
   {

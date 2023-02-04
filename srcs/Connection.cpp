@@ -156,7 +156,7 @@ bool Connection::check_and_handle(fd_set& read_set, fd_set& write_set)
   {
     if(ft::clear_fd(_cfd, read_set))
     {
-      Log("Requset Recieved", _id);
+      Log("Request Recieved", _id);
       recv_request();
     }
   }
