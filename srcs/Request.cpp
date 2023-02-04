@@ -36,7 +36,8 @@ Request& Request::operator=(Request const& other)
 }
 
 /**
- * @brief Connection, recv_requestから呼ばれる
+ * @brief リクエストをパーツごとに読み取る
+ *        FIRST_LINE: GET HTTP/1.0 uri
  */
 void Request::handle_request()
 {
@@ -72,7 +73,6 @@ void Request::handle_request()
 void Request::_parse_startline()
 {
   size_t eol = _raw_data.buf.find(_delim);
-  std::cerr << "_raw_data.buf" << _raw_data.buf << std::endl;
   if(eol == HttpString::npos)
   {
     _suspended = true;
@@ -97,7 +97,7 @@ void Request::_validate_startline()
 }
 
 /**
- * @brief HttpInfoに必要な値を設定する
+ * @brief エラー時に、HttpInfoにデフォルト値を設定する
  */
 void Request::setup_default_http_info(HttpInfo& info) const
 {
@@ -152,7 +152,7 @@ void Request::_set_script_name(HttpInfo& info)
 
 /**
  * @brief ヘッダーフィールドのパース
- * @note 空行までがヘッダーフィールドのため空行がない場合はReRecvする
+ * @note 空行までがヘッダーフィールドのため空行がない場合は接続を継続して再受信する
  */
 void Request::_parse_header()
 {
@@ -266,6 +266,9 @@ void Request::_select_location()
   }
 }
 
+/**
+ * @brief ヘッダーをパースし値をセットする
+ */
 void Request::_retrieve_header()
 {
   if(_parse_phase != HEADER)
