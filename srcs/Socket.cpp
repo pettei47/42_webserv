@@ -16,7 +16,6 @@ size_t Socket::get_port() const
   return _port;
 }
 
-//TODO: lfdのlは何か確認する -> listen-fdっぽい？
 int Socket::get_lfd() const
 {
   return _lfd;
@@ -35,7 +34,6 @@ void  Socket::add_server(const Server& server)
 /**
  * @brief selectを通して呼ばれる
  * - connectionsに新しいfdのエントリを追加する
- * TODO: 説明がふわっとしてるのでもう少し説明する。
  */
 int Socket::accept_connection()
 {
@@ -65,7 +63,6 @@ int Socket::accept_connection()
 void  Socket::open_listenfd()
 {
   struct addrinfo hints, *results, *p;
-  //TODO: addrinfoについて調べる。
 
   ::memset(&hints, 0, sizeof(struct addrinfo));
   hints.ai_family = AF_INET;

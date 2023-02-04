@@ -11,7 +11,7 @@ namespace http
   }
 
   /**
-   * @brief TODO: この関数の説明を書く。
+   * @brief ヘッダーのKEY部分が適切な文字でできているかを調べる
    */
   bool  is_token(std::string& str)
   {
@@ -31,7 +31,7 @@ namespace http
   }
 
   /**
-   * @brief TODO: この関数の説明を書く。
+   * @brief 渡されたstringがカンマ区切りになっているかを見る
    */
   bool is_comma_separated_list(std::string const& value)
   {
@@ -53,7 +53,7 @@ namespace http
   }
 
   /**
-   * @brief TODO: この関数の説明を書く。
+   * @brief 現在時刻を取得
    */
   std::string get_current_time()
   {
@@ -66,7 +66,7 @@ namespace http
   }
 
   /**
-   * @brief TODO: この関数の説明を書く。
+   * @brief URLのポートまでの部分を作る
    */
   std::string generate_uri_head(const Server& s)
   {

@@ -77,7 +77,7 @@ std::string Header::content_type_to_ext() const
 
 /**
  * @brief headerでデフォルトで設定されているものを格納する
- * @note TODO: デフォルトについてはまだ詳しく調べられていない
+ * @note デフォルトについてはまだ詳しく調べられていないが、Serverだけあれば大丈夫らしい
  */
 void Header::_set_default_header()
 {
@@ -103,7 +103,6 @@ void  Header::set_content_type(const std::string& file)
 void Header::set_content_length(size_t length)
 {
   _headers["Content-Length"] = ft::to_string(length);
-  // TODO: to_stringって必要か？調べる。
 }
 
 /**
