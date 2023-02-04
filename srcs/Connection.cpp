@@ -41,7 +41,7 @@ Connection& Connection::operator=(Connection const& other)
   return *this;
 }
 /**
- * @brief TODO: この関数の説明を書く。
+ * @brief リクエストの中身を解析し、レスポンスを作る
  */
 void Connection::recv_request()
 {
