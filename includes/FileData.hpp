@@ -25,6 +25,7 @@ public:
   bool is_file();
   bool is_dir();
   ssize_t get_filesize();
+  std::string get_filepath();
 
   void set_filepath(const std::string& path);
 

@@ -25,6 +25,8 @@ Response::~Response() { }
  */
 bool Response::_check_cgi()
 {
+  if (!_info.location)
+    return false;
   return !_info.location->cgi_path.empty(); // && ft::get_file_ext(_filepath) == "py";
 }
 
@@ -45,17 +47,20 @@ bool Response::_check_return_redirect()
  */
 void Response::_set_error_filepath()
 {
-  if(!_info.server)
+  if (_info.server)
   {
-    _filepath = "";
-    return;
+    std::map< int, std::string >& error_pages = _info.server->error_pages;
+    int status_code = _status.get_status_code();
+    if(error_pages.count(status_code) == 0)
+      _filepath = "";
+    else
+      _filepath = error_pages[status_code];
+    return ;
   }
-  std::map< int, std::string >& error_pages = _info.server->error_pages;
-  int status_code = _status.get_status_code();
-  if(error_pages.count(status_code) == 0)
-    _filepath = "";
+  if (!_info.error_filepath.empty())
+    _filepath = _info.error_filepath;
   else
-    _filepath = error_pages[status_code];
+    _filepath = "";
 }
 
 /**
@@ -99,13 +104,14 @@ void Response::_handle_error(int status_code)
   _send_size = 0;
   int now_status = _status.get_status_code();
 
-  if(200 <= now_status && now_status < 300)
+  if(!_info.error_filepath.empty() || (200 <= now_status && now_status < 300))
   {
     _status.set_status_code(status_code);
     _set_error_filepath();
   }
   // エラー時にエラーが起きた場合と_filepathがない場合は、エラーページの読み込みを行わない
-  if(now_status != 200 || _filepath.empty())
+  if(_info.error_filepath.empty() && 
+    (now_status < 200 || 400 <= now_status || _filepath.empty()))
   {
     if(_body.set_error_default_body(_status.get_status_code()))
       _phase = SEND;
@@ -605,18 +611,20 @@ void Response::_handle_delete()
 void Response::_first_preparation()
 {
   Log(_filepath.c_str());
-  if(_check_return_redirect())
-    _prepare_redirect();
-  else if(_filepath.empty())
+  try
   {
-    if(_body.set_error_default_body(_status.get_status_code()))
-      _phase = SEND;
-    else // errorページの設定に失敗した場合
-      _phase = CLOSE;
-  }
-  else
-  {
-    try
+    if(_check_return_redirect())
+      _prepare_redirect();
+    else if(_filepath.empty())
+    {
+      if(_body.set_error_default_body(_status.get_status_code()))
+        _phase = SEND;
+      else // errorページの設定に失敗した場合
+        _phase = CLOSE;
+    }
+    else if (!_status.is_success())
+      throw http::StatusException(_status.get_status_code());
+    else
     {
       if(_info.method == "GET")
         _prepare_get();
@@ -625,17 +633,17 @@ void Response::_first_preparation()
       else if(_info.method == "DELETE")
         _handle_delete();
     }
-    catch(const http::StatusException& e)
-    {
-      if(e.get_status() == 301)
-        _prepare_redirect(true);
-      else
-        _handle_error(e.get_status());
-    }
-    catch(const std::exception& e)
-    {
-      _handle_error(500);
-    }
+  }
+  catch(const http::StatusException& e)
+  {
+    if(e.get_status() == 301)
+      _prepare_redirect(true);
+    else
+      _handle_error(e.get_status());
+  }
+  catch(const std::exception& e)
+  {
+    _handle_error(500);
   }
 }
 

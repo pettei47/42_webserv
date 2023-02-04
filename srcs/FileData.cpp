@@ -94,6 +94,11 @@ ssize_t FileData::get_filesize()
   return _sb.st_size;
 }
 
+std::string FileData::get_filepath()
+{
+  return _filepath;
+}
+
 /**
  * @brief filepathをセットする
  * @param path: filepath
