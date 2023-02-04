@@ -23,7 +23,7 @@ namespace http
   public:
     StatusException(int status)
       : _status(status)
-      , _msg("HttpError: " + ft::to_string(status)){};
+      , _msg("StatusException: " + ft::to_string(status)){};
     ~StatusException() throw(){};
     const char* what() const throw()
     {

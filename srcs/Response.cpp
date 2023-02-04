@@ -609,7 +609,7 @@ void Response::_first_preparation()
     _prepare_redirect();
   else if(_filepath.empty())
   {
-    if(_body.set_error_default_body(_httpstatus.get_status_code()))
+    if(_body.set_error_default_body(_status.get_status_code()))
       _phase = SEND;
     else // errorページの設定に失敗した場合
       _phase = CLOSE;
@@ -627,10 +627,10 @@ void Response::_first_preparation()
     }
     catch(const http::StatusException& e)
     {
-      if(e.get_http_status() == 301)
+      if(e.get_status() == 301)
         _prepare_redirect(true);
       else
-        _handle_error(e.get_http_status());
+        _handle_error(e.get_status());
     }
     catch(const std::exception& e)
     {
