@@ -99,8 +99,10 @@ void Request::_validate_startline()
 /**
  * @brief エラー時に、HttpInfoにデフォルト値を設定する
  */
-void Request::setup_default_http_info(HttpInfo& info) const
+void Request::setup_default_http_info(HttpInfo& info, int status) const
 {
+  std::map<int, std::string>& error_pages = _server->error_pages;
+
   info.method = "GET";
   info.uri = "";
   info.protocol_version = "HTTP/1.1";
@@ -108,6 +110,7 @@ void Request::setup_default_http_info(HttpInfo& info) const
   info.body = HttpString();
   info.server = NULL;
   info.location = NULL;
+  info.error_filepath = error_pages[status];
   info.script_name = "";
   info.query_string = "";
 }
@@ -124,6 +127,7 @@ void Request::setup_http_info(HttpInfo& info) const
   info.body = _body;
   info.server = _server;
   info.location = _location;
+  info.error_filepath = "";
 
   size_t index = _uri.find('?');
   if(index != std::string::npos)
@@ -274,7 +278,7 @@ void Request::_retrieve_header()
 
   _parse_header();
   _select_location();
-  _validate_header();
+  // _validate_header();
 
   if(_method == "POST")
     _parse_phase = BODY;
@@ -319,6 +323,8 @@ void Request::_parse_body()
 
 void Request::_validate_request()
 {
+  _validate_startline();
+  _validate_header();
   size_t size = _location->methods.size();
   size_t i = 0;
   for(; i < size; ++i)
@@ -349,4 +355,12 @@ void Request::show_request() const
 
 bool Request::get_suspended() {
   return _suspended;
+}
+
+void  Request::show_server() const
+{
+  std::cout << "Server Info" << std::endl;
+  std::cout << "  - name: " << _server->name << std::endl;
+  std::cout << "  - root: '" << _server->root << "'" << std::endl;
+  _headers.show_headers();
 }

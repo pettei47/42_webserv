@@ -65,8 +65,6 @@ void Message::_retrieve_startline()
     return;
 
   _parse_startline();
-  _validate_startline();
-
   _parse_phase = HEADER;
 }
 

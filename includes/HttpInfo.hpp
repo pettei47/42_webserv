@@ -19,6 +19,7 @@ struct HttpInfo
   HttpString  body;
   Server*     server;
   Location*   location;
+  std::string error_filepath;
 };
 
 #endif /* HTTP_INFO_CPP */

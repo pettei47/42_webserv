@@ -61,7 +61,8 @@ void Connection::recv_request()
   catch(http::StatusException& e)
   {
     Log(std::string("Request ") + e.what());
-    _request.setup_default_http_info(_info);
+
+    _request.setup_default_http_info(_info, e.get_status());
     _make_response(e.get_status());
     return;
   }

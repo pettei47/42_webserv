@@ -63,11 +63,12 @@ public:
 
   void handle_request();
   void append_raw_data(char* buf, ssize_t len);
-  void setup_default_http_info(HttpInfo& info) const;
+  void setup_default_http_info(HttpInfo& info, int status) const;
   void setup_http_info(HttpInfo& info) const;
   bool get_suspended();
 
   void show_request() const;
+  void show_server() const;
   Request(Request const& other);
   Request& operator=(Request const& other);
 
