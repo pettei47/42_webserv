@@ -245,8 +245,7 @@ void Request::_select_location()
   _server = &_servers[0];
   _server->name = _servers[0].names[0];
 
-  size_t size = _servers.size();
-  for(size_t i = 0; i < size; ++i)
+  for(size_t i = 0; i < _servers.size(); ++i)
   {
     for(size_t j = 0; j < _servers[i].names.size(); ++j)
     {
@@ -258,8 +257,7 @@ void Request::_select_location()
     }
   }
   _location = &(_server->locations[0]);
-  size = _server->locations.size();
-  for(size_t i = 0; i < size; ++i)
+  for(size_t i = 0; i < _server->locations.size(); ++i)
   {
     if(_location_matches_uri(_uri, _server->locations[i].name))
       _location = &(_server->locations[i]);
