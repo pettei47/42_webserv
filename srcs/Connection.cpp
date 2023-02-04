@@ -62,7 +62,7 @@ void Connection::recv_request()
   {
     Log(std::string("Request ") + e.what());
     _request.setup_default_http_info(_info);
-    _make_response(e.get_http_status());
+    _make_response(e.get_status());
     return;
   }
   if(_request.get_suspended())

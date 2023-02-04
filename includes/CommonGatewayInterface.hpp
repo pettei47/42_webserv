@@ -32,8 +32,8 @@ private:
   int           _read_fd;
   pid_t         _ch_pid;
   HttpString    _data;
-  Status&       _httpstatus;
-  Header&       _httpheader;
+  Status&       _status;
+  Header&       _header;
   Body&         _body;
   HttpInfo&     _info;
   std::string&  _filepath;

@@ -1,14 +1,14 @@
 #include "webserv.hpp"
 
 CommonGatewayInterface::CommonGatewayInterface(HttpInfo& info,
-          Status& httpstatus,
-          Header& httpheader,
+          Status& status,
+          Header& header,
           Body& body,
           std::string& filepath)
   : _write_fd(-1)
   , _read_fd(-1)
-  , _httpstatus(httpstatus)
-  , _httpheader(httpheader)
+  , _status(status)
+  , _header(header)
   , _body(body)
   , _info(info)
   , _filepath(filepath)
@@ -297,7 +297,7 @@ enum phase CommonGatewayInterface::first_preparation()
   catch(const http::StatusException& e)
   {
     // エラー番号によってどのリソースを解放するか決める
-    _delete_resources(arg, pipe_c2p, pipe_p2c, e.get_http_status());
+    _delete_resources(arg, pipe_c2p, pipe_p2c, e.get_status());
     throw http::StatusException(500);
   }
 
@@ -355,7 +355,7 @@ enum phase CommonGatewayInterface::check_and_handle(fd_set& read_set, fd_set& wr
   }
   catch(const http::StatusException& e)
   {
-    _read_or_write_error(e.get_http_status());
+    _read_or_write_error(e.get_status());
   }
   catch(const std::exception& e)
   {

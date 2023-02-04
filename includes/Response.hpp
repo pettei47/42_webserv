@@ -23,8 +23,8 @@ private:
   int _connection_fd;
   enum phase _phase;
   std::string _filepath;
-  Status _httpstatus;
-  Header _httpheader;
+  Status  _status;
+  Header  _header;
   HttpInfo& _info;
   Body _body;
   CommonGatewayInterface _cgi;

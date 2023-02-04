@@ -5,9 +5,9 @@ namespace http
   /**
    * @brief httpステータスコードを返す
    */
-  int StatusException::get_http_status() const
+  int StatusException::get_status() const
   {
-    return _http_status;
+    return _status;
   }
 
   /**

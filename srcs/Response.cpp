@@ -5,9 +5,9 @@ Response::Response(HttpInfo& info, int connection_fd, int status_code)
   , _fd(0)
   , _connection_fd(connection_fd)
   , _phase(RECV)
-  , _httpstatus(info.protocol_version, status_code)
+  , _status(info.protocol_version, status_code)
   , _info(info)
-  , _cgi(info, _httpstatus, _httpheader, _body, _filepath)
+  , _cgi(info, _status, _header, _body, _filepath)
   , _first_response(true)
   , _send_size(0)
   , _autoindex(false)
@@ -63,7 +63,7 @@ void Response::_set_error_filepath()
  */
 void Response::_set_filepath()
 {
-  if(_httpstatus.is_success())
+  if(_status.is_success())
     _filepath = _info.location->root + _info.script_name;
   else
     _set_error_filepath();
@@ -97,17 +97,17 @@ void Response::_handle_error(int status_code)
 {
   _info.method = "GET";
   _send_size = 0;
-  int now_status = _httpstatus.get_status_code();
+  int now_status = _status.get_status_code();
 
   if(200 <= now_status && now_status < 300)
   {
-    _httpstatus.set_status_code(status_code);
+    _status.set_status_code(status_code);
     _set_error_filepath();
   }
   // エラー時にエラーが起きた場合と_filepathがない場合は、エラーページの読み込みを行わない
   if(now_status != 200 || _filepath.empty())
   {
-    if(_body.set_error_default_body(_httpstatus.get_status_code()))
+    if(_body.set_error_default_body(_status.get_status_code()))
       _phase = SEND;
     else // errorページの設定に失敗した場合
       _phase = CLOSE;
@@ -233,7 +233,7 @@ void Response::_prepare_read()
   }
   catch(const http::StatusException& e)
   {
-    _handle_error(e.get_http_status());
+    _handle_error(e.get_status());
   }
   catch(const std::exception& e)
   {
@@ -275,7 +275,7 @@ void Response::_prepare_write()
   Log(_filepath.c_str());
   _open_and_set_fd(false);
   std::string location_uri = http::generate_uri_head(*_info.server) + _info.uri + new_file_name;
-  _httpheader.append("Location", location_uri);
+  _header.append("Location", location_uri);
   _phase = WRITE;
 }
 
@@ -318,7 +318,7 @@ void Response::_read()
   }
   catch(const http::StatusException& e)
   {
-    _handle_read_error(e.get_http_status());
+    _handle_read_error(e.get_status());
   }
   catch(const std::exception& e)
   {
@@ -336,12 +336,12 @@ void Response::_write()
     if(write(_fd, _info.body.data(), _info.body.size()) < 0)
       throw std::exception();
     _body.close_fd();
-    _httpstatus.set_status_code(201);
+    _status.set_status_code(201);
     _phase = SEND;
   }
   catch(const http::StatusException& e)
   {
-    _handle_write_error(e.get_http_status());
+    _handle_write_error(e.get_status());
   }
   catch(const std::exception& e)
   {
@@ -371,10 +371,10 @@ void Response::_handle_send_error(int status_code)
  */
 void Response::_set_header()
 {
-  _httpheader.set_content_length(_body.get_all_body_size());
-  _httpheader.set_content_type(_filepath);
-  _httpheader.append("Connection", "close");
-  _httpheader.append("Date", http::get_current_time());
+  _header.set_content_length(_body.get_all_body_size());
+  _header.set_content_type(_filepath);
+  _header.append("Connection", "close");
+  _header.append("Date", http::get_current_time());
 }
 
 /**
@@ -385,8 +385,8 @@ void Response::_first_send()
 {
   _set_header();
   HttpString str_message;
-  str_message.append(_httpstatus.to_string());
-  str_message.append(_httpheader.to_string());
+  str_message.append(_status.to_string());
+  str_message.append(_header.to_string());
   str_message.append(_body.get_body());
   _send_content(str_message.data(), str_message.size());
 }
@@ -427,7 +427,7 @@ void Response::_send()
   }
   catch(const http::StatusException& e)
   {
-    _handle_send_error(e.get_http_status());
+    _handle_send_error(e.get_status());
   }
   catch(const std::exception& e)
   {
@@ -487,7 +487,7 @@ void Response::_parse_header()
     else
     {
       headerfield = _parse_headerfield(line);
-      _httpheader.append(headerfield);
+      _header.append(headerfield);
     }
     line = _get_next_line();
     if(line.empty())
@@ -502,9 +502,9 @@ void Response::_parse_header()
  */
 void Response::_parse_body()
 {
-  if(_httpheader.contains("Content-Length"))
+  if(_header.contains("Content-Length"))
   {
-    ssize_t len = _httpheader.get_content_length();
+    ssize_t len = _header.get_content_length();
     if(len != -1)
     {
       _body.set_body(_raw_data.buf.substr(_raw_data.index, len));
@@ -525,7 +525,7 @@ void Response::_prepare_CGI()
   }
   catch(const http::StatusException& e)
   {
-    _handle_error(e.get_http_status());
+    _handle_error(e.get_status());
   }
   catch(const std::exception& e)
   {
@@ -549,7 +549,7 @@ void Response::_handle_cgi(fd_set& read_set, fd_set& write_set)
   }
   catch(const http::StatusException& e)
   {
-    _handle_error(e.get_http_status());
+    _handle_error(e.get_status());
   }
   catch(const std::exception& e)
   {
@@ -575,8 +575,8 @@ void Response::_prepare_redirect(bool to_directory)
     status = _info.location->redirect.begin()->first;
     path = _info.location->redirect.begin()->second;
   }
-  _httpstatus.set_status_code(status);
-  _httpheader["Location"] = path;
+  _status.set_status_code(status);
+  _header["Location"] = path;
   _phase = SEND;
 }
 
@@ -592,7 +592,7 @@ void Response::_handle_delete()
   {
     if(unlink(_filepath.c_str()) == -1)
       throw http::StatusException(500);
-    _httpstatus.set_status_code(204);
+    _status.set_status_code(204);
   }
   else //not file
     throw http::StatusException(403);
@@ -733,6 +733,6 @@ void Response::show_response() const
 {
   std::cout << " Response Info" << std::endl;
   std::cout << "  - status_line: " << _status_line << std::endl;
-  _httpheader.show_headers();
+  _header.show_headers();
   std::cout << "  - body: '" << _body.get_body() << "'" << std::endl;
 }

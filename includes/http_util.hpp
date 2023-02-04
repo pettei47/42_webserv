@@ -17,19 +17,19 @@ namespace http
     static const int CLOSE = 600;
 
   private:
-    int         _http_status;
+    int         _status;
     std::string _msg;
 
   public:
     StatusException(int status)
-      : _http_status(status)
+      : _status(status)
       , _msg("HttpError: " + ft::to_string(status)){};
     ~StatusException() throw(){};
     const char* what() const throw()
     {
       return (_msg.c_str());
     };
-    int get_http_status() const;
+    int get_status() const;
   };
 
   bool        is_token(std::string& str);
