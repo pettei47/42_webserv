@@ -44,6 +44,7 @@ private:
   void _ignore_empty_lines();
 
   void _retrieve_header();
+  void _retrieve_body();
 
   void _validate_startline();
   void _validate_headerfield(std::pair< std::string, std::string >& headerfield);

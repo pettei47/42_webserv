@@ -297,6 +297,18 @@ void Request::_retrieve_header()
     _parse_phase = DONE;
 }
 
+void Request::_retrieve_body()
+{
+  if(_parse_phase != BODY)
+    return;
+
+  _parse_body();
+
+  if (!_suspended)
+    _parse_phase = DONE;
+}
+
+
 void Request::_parse_body()
 {
   HttpString new_body_chunk;
