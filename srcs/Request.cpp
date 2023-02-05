@@ -5,6 +5,7 @@ Request::Request(std::vector< Server >& servers)
   , _servers(servers)
   , _content_length(0)
   , _suspended(false)
+  , _invalid(0)
   , _body_type(NONE)
 { }
 
@@ -194,16 +195,25 @@ void Request::_validate_headerfield(std::pair< std::string, std::string >& heade
   std::string key = headerfield.first;
   std::string value = headerfield.second;
   if(!http::is_token(key))
-    throw http::StatusException(400);
+  {
+    _invalid = 400;
+    return ;
+  }
   if(_headers.contains(key))
   {
     if(key == "Host" || key == "Content-Length")
-      throw http::StatusException(400);
+    {
+      _invalid = 400;
+      return ;
+    }
   }
   if(key == "Host")
   {
     if(value.empty() || http::is_comma_separated_list(value))
-      throw http::StatusException(400);
+    {
+      _invalid = 400;
+      return ;
+    }
   }
 }
 
@@ -289,7 +299,6 @@ void Request::_retrieve_header()
   _parse_header();
   _set_body_type();
   _select_location();
-  // _validate_header();
 
   if(_method == "POST")
     _parse_phase = BODY;
@@ -347,11 +356,9 @@ void Request::_parse_body()
 void Request::_validate_request()
 {
   _validate_startline();
+  if (_invalid > 0)
+    throw http::StatusException(_invalid);
   _validate_header();
-  // for (Header _headers)
-  // {
-  //   _validate_headerfield(headerfield);
-  // }
   size_t size = _location->methods.size();
   size_t i = 0;
   for(; i < size; ++i)

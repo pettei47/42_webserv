@@ -22,10 +22,11 @@ private:
   std::string _method;
   std::string _uri;
   std::string _protocol_version;
-  Header _headers;
-  ssize_t _content_length;
-  HttpString _body;
-  bool  _suspended;
+  Header      _headers;
+  ssize_t     _content_length;
+  HttpString  _body;
+  bool        _suspended;
+  int         _invalid;
 
   enum body_type
   {
