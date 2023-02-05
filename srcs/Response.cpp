@@ -458,7 +458,9 @@ void Response::_parse_message()
     _retrieve_body();
     /* Falls through. */
   default:
+#if DEBUG_MODE == 1
     show_response();
+#endif
     break;
   }
 }
