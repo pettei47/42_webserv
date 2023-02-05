@@ -21,6 +21,12 @@ DEPENDENCIES			=		$(OBJS:.o=.d)
 DEBUG_MODE				=		0
 TEST_MODE					=		0
 
+ifeq ($(shell uname),Linux)
+	OS_LINUX = 1
+else
+	OS_LINUX = 0
+endif
+
 all: $(NAME)
 
 $(NAME): $(OBJS_DIR) $(OBJS)
