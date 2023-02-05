@@ -53,6 +53,7 @@ private:
   void _parse_startline();
   void _parse_header();
   void _parse_body();
+  void _set_body_type();
 
   static void _set_script_name(HttpInfo& info);
   static bool _location_matches_uri(std::string uri, std::string location_name);

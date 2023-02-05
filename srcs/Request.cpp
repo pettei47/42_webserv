@@ -53,6 +53,7 @@ void Request::handle_request()
     /* Falls through. */
   case HEADER:
     _retrieve_header();
+    std::cerr << "_parse_phase: " << _parse_phase << std::endl;
     if (_suspended)
       break;
     /* Falls through. */
@@ -178,6 +179,17 @@ void Request::_parse_header()
   _suspended = true;
 }
 
+void Request::_set_body_type()
+{
+  if(_headers.contains("Content-Length"))
+  {
+    _content_length = _headers.get_content_length();
+    _body_type = CONTENT_LENGTH;
+  }
+  if(_headers.contains("Transfer-Encoding"))
+    _body_type = CHUNKED;
+}
+
 void Request::_validate_headerfield(std::pair< std::string, std::string >& headerfield)
 {
   std::string key = headerfield.first;
@@ -209,7 +221,6 @@ void Request::_validate_header()
       throw http::StatusException(400);
     if(_content_length > _location->client_max_body_size)
       throw http::StatusException(413);
-    _body_type = CONTENT_LENGTH;
   }
   if(_headers.contains("Transfer-Encoding"))
   {
@@ -217,7 +228,6 @@ void Request::_validate_header()
       throw http::StatusException(501);
     if(_headers.contains("Content-Length"))
       throw http::StatusException(400);
-    _body_type = CHUNKED;
   }
 }
 
@@ -278,6 +288,7 @@ void Request::_retrieve_header()
     return;
 
   _parse_header();
+  _set_body_type();
   _select_location();
   // _validate_header();
 
@@ -326,6 +337,10 @@ void Request::_validate_request()
 {
   _validate_startline();
   _validate_header();
+  // for (Header _headers)
+  // {
+  //   _validate_headerfield(headerfield);
+  // }
   size_t size = _location->methods.size();
   size_t i = 0;
   for(; i < size; ++i)
