@@ -48,7 +48,7 @@ std::string Message::_get_next_word(bool eol, size_t max, int status_code)
     return ""; //for now
 
   if(index - _raw_data.index > max)
-    throw http::StatusException(status_code);
+    return "";
 
   word = _raw_data.buf.substr(_raw_data.index, index - _raw_data.index).std_str();
 

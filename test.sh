@@ -10,9 +10,10 @@ curl -i -X POST localhost:8080
 curl -i http://localhost:8081/ -H"Host: default_server"
 curl -i http://localhost:8081/ -H"Host: virtual_server"
 curl -i localhost:8080
+curl -i localhost:8081
 curl -i localhost:8080 -H"Host: test,test,test"
 curl -i localhost:8080 -H"Host:"
-curl -i localhost:8080 -H"Host:"#
+curl -i localhost:8080 -H"Host:"
 curl -i localhost:8080 -H"Host:''"
 curl -i localhost:8080 -H"Transfer-Encoding: test"
 curl -i localhost:8080 -X POST
