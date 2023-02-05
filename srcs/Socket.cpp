@@ -153,3 +153,10 @@ void  Socket::check_and_handle(fd_set& read_set, fd_set& write_set)
       it++;
   }
 }
+
+void  Socket::close_connection(){
+  for (connection_itr it = _connections.begin(); it != _connections.end();){
+    it->close();
+    it = _connections.erase(it);
+  }
+}

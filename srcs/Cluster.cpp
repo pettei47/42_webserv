@@ -66,6 +66,8 @@ void  Cluster::_set_select_fds()
 void Cluster::main_loop()
 {
   int ret = 0;
+  int loopcnt = 0;
+  const int TIMEOUT = 10;
   while(1)
   {
     struct timeval timeout;
@@ -79,6 +81,17 @@ void Cluster::main_loop()
     {
       Log("Select Error");
       break; //main loop end
+    }
+    if (ret == 0){ // すべてのconnectionについて規定回数変化がない場合、すべてのconnectionを閉じる
+      ++loopcnt;
+      if (loopcnt > TIMEOUT){
+        for(socket_itr s_it = _sockets.begin(); s_it != _sockets.end(); ++s_it){
+          s_it->close_connection();
+        }
+      }
+    }
+    else{
+      loopcnt = 0;
     }
     for(socket_itr s_it = _sockets.begin(); s_it != _sockets.end(); ++s_it)
     {
