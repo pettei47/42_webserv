@@ -22,6 +22,7 @@ curl -i localhost:8080/aaa
 curl -i localhost:8080/aaa -X PUT
 curl -i localhost:8080/aaaa
 curl -i localhost:8080/aaaa -X POST
+curl -i localhost:8080/aaaa -X UNKNOWN
 curl -i localhost:8080/cgi/
 curl -i localhost:8080/cgi/cgi
 curl -i localhost:8080/cgi/cgi.sh
