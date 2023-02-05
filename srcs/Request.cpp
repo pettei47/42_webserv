@@ -53,7 +53,6 @@ void Request::handle_request()
     /* Falls through. */
   case HEADER:
     _retrieve_header();
-    std::cerr << "_parse_phase: " << _parse_phase << std::endl;
     if (_suspended)
       break;
     /* Falls through. */

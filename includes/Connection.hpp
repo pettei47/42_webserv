@@ -28,7 +28,7 @@ private:
   void    _make_response(int status_code);
   ssize_t _recv();
 
-  static const size_t _max_buffer_size = 1024;
+  static const size_t _max_buffer_size = (1 << 14);
   static size_t       _total_connections;
 
   char _buf[_max_buffer_size + 1];
