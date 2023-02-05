@@ -7,10 +7,10 @@ class TimeManage
 {
 private:
   // 秒単位
-  static const int TIME_LIMIT = 10;
   time_t _time;
 
 public:
+  static const int CGI_TIME_LIMIT = 10;
   TimeManage();
   ~TimeManage();
 

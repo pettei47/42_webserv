@@ -67,7 +67,7 @@ void Cluster::main_loop()
 {
   int ret = 0;
   int loopcnt = 0;
-  const int TIMEOUT = 10;
+  const int TIMEOUT = TimeManage::CGI_TIME_LIMIT + 10; // CGIは10secで切り上げ
   while(1)
   {
     struct timeval timeout;
@@ -88,6 +88,7 @@ void Cluster::main_loop()
         for(socket_itr s_it = _sockets.begin(); s_it != _sockets.end(); ++s_it){
           s_it->close_connection();
         }
+        loopcnt = 0;
       }
     }
     else{

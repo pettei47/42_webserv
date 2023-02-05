@@ -20,5 +20,5 @@ bool TimeManage::check() const
 {
   time_t now = time(NULL);
   // _time < now しかありえないが、一応書いてる
-  return _time < now && now - _time >= TIME_LIMIT;
+  return _time < now && now - _time >= CGI_TIME_LIMIT;
 }
