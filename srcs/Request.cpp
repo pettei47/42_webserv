@@ -268,7 +268,6 @@ void Request::_select_location()
   _server = &_servers[0];
   _server->name = _servers[0].names[0];
 
-  std::cerr << "_server->name 1: " << _server->name << std::endl;
   for(size_t i = 0; i < _servers.size(); ++i)
   {
     for(size_t j = 0; j < _servers[i].names.size(); ++j)
@@ -278,7 +277,6 @@ void Request::_select_location()
       {
         _server = &_servers[i];
         _server->name = _servers[i].names[j];
-        std::cerr << "_server->name 2: " << _server->name << std::endl;
       }
     }
   }
