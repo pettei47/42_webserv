@@ -1,18 +1,9 @@
-curl --resolve default_server:8081:127.0.0.1 default_server:8081
-curl --resolve localhost:8081:127.0.0.1 virtual_server:8081
-curl --resolve virtual_server:8081:0.0.0.0
-curl --resolve virtual_server:8081:0.0.0.0 http://localhost
-curl --resolve virtual_server:8081:0.0.0.0 http://localhost/
-curl --resolve virtual_server:8081:0.0.0.0 http://localhost:8081
-curl --resolve virtual_server:8081:0.0.0.0 http://virtual_server/
+curl --resolve default_server:8081:0.0.0.0 http://default_server:8081
 curl --resolve virtual_server:8081:0.0.0.0 http://virtual_server:8081
-curl --resolve virtual_server:8081:0.0.0.0 http://virtual_server:8081/virtual.html
-curl --resolve virtual_server:8081:127.0.0.1 virtual_server:8081
 curl -i -F upfile=@/tmp/index.html localhost:8080/upload/
 curl -i -X GET -F upfile=@/tmp/index.html localhost:8080/upload/
 curl -i -X GET localhost:8080/upload
 curl -i -X POST -F upfile=@./conf/default.conf localhost:8080/upload/
-curl -i -X POST -F upfile=@./conf/default.conf localhost:8080/upload/ -H"Content-Type:test/html"
 curl -i -X POST -F upfile=@./conf/default.conf localhost:8080/upload/ -H"Transfer-Encoding: chunked"
 curl -i -X POST -F upfile=@/tmp/index.html localhost:8080/upload/
 curl -i -X POST localhost:8080
