@@ -8,6 +8,7 @@ std::string Autoindex::generate_body(std::string script_name, std::string dirpat
 {
   DIR* d = _open_directory(dirpath);
   std::vector< std::string > entries = _get_file_entries(d);
+  closedir(d);
   return _generate_html_body(script_name, entries);
 }
 
